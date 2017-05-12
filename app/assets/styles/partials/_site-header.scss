@@ -1,0 +1,15 @@
+.site-header {
+    position: relative;
+    top: -65px;
+    left: 20px;
+    width: 600px;
+
+    h1 {
+        color: $light-blue;
+        font-family: $accent-font-stack;
+        font-size: 3rem;
+        letter-spacing: .2rem;
+        text-align: center;
+        background-color: $dark-gray;
+    }
+}

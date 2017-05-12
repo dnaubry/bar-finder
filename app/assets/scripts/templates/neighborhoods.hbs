@@ -1,0 +1,10 @@
+<p>Where in the city do you want to grab a drink?</p>
+<div class="neighborhoods">
+    <label for="neighborhoods">Neighborhoods:</label>
+    <select id="neighborhoods">
+    <option value="" disabled selected>Pick one!</option>
+    {{#each neighborhoods}}
+        <option value="{{this}}">{{this}}</option>
+    {{/each}}
+    </select>
+</div>

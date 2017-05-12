@@ -1,0 +1,25 @@
+html, body {
+    background-color: $dark-gray;
+    margin: 0;
+    padding: 0;
+}
+
+button {
+        background-color: $yellow;
+        border: 1px solid $light-blue;
+        border-radius: 5px;
+        color: $dark-gray;
+        font-family: $accent-font-stack;
+        font-size: 2rem;
+        text-transform: uppercase;
+        letter-spacing: .1rem;
+        margin: 4rem auto;
+        padding: 1rem 1.5rem;
+        transition: all 0.5s ease;
+
+        &:hover {
+            background-color: $dark-gray;
+            color: $yellow;
+            cursor: pointer;           
+        }
+    }

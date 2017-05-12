@@ -1,0 +1,18 @@
+.wrapper {
+    border: 1px dashed $yellow;
+    border-radius: 5px;
+    margin: 5rem auto;
+    padding-bottom: 3rem;
+
+    @include atSmall {
+        width: 90%;
+    }
+
+    @include atMedium {
+        width: 80%;
+    }
+
+    @include atLarge {
+        width: 70%;
+    }
+}

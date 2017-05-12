@@ -1,0 +1,15 @@
+{
+  "extends": "standard",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "presets": {
+    "es6": 1
+  },
+  "rules": {
+    "one-var": 0,
+    "semi": 0,
+    "space-before-function-paren": 0
+  }
+}

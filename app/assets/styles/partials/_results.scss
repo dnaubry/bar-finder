@@ -1,0 +1,60 @@
+.results {
+    border-top: 1px dashed $yellow;
+    margin: 1rem auto;
+    width: 60%;
+
+    .result {
+        @include clearfix;
+
+        background-color: $light-gray;
+        border-radius: 5px;
+        color: $dark-gray;
+        font-family: $main-font-stack;
+        font-size: 1.2rem;
+        text-align: center;
+        margin: 2rem 1rem;
+        padding: 1rem;
+
+        &__name {
+        font-family: $accent-font-stack;
+        font-size: 1.4rem;
+        font-weight: 700;
+        letter-spacing: .05rem;
+        padding-bottom: 1rem;
+ 
+    }
+
+        &__column {
+            display: inline-block;
+
+            &--left {
+                text-align: right;
+                padding-right: .2rem;
+            }
+
+            &--right {
+                text-align: left;
+                padding-left: .2rem;
+            }
+        }
+    }
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+            margin-bottom: .2rem;
+            text-transform: capitalize;
+            
+            span {
+                font-weight: 700;
+            }
+        }
+    }
+}
+
+.retry {
+    text-align: center;
+}

@@ -1,0 +1,103 @@
+.question {
+    color: $light-blue;
+    font-family: $main-font-stack;
+    font-size: 1.2rem;
+    text-align: center;
+    padding-bottom: 2rem;
+    width: 100%;
+
+    p {
+        padding-bottom: 1rem;
+    }
+
+    &__choices {
+        display: inline-block;
+        width: 300px;
+
+       .drink-label {
+           padding: .7rem;
+           text-transform: capitalize;
+
+           &:hover {
+            background-color: $green;
+            border: 1px solid $light-blue;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        }
+
+        &--columns {
+            float: left;
+            width: 50%;
+        }
+
+        .price {
+            background-color: $green;
+            border: 1px solid $light-blue;
+            float: left;
+            padding: 1rem;
+            transition: all 0.5s ease;
+
+            &:first-of-type {
+                border-radius: 5px 0 0 5px;
+            }
+
+            &:last-of-type {
+                border-radius: 0 5px 5px 0;
+            }
+
+            &:hover {
+                background-color: $dark-gray;
+            }
+            
+            label {
+                font-size: 1.3rem;
+                padding: 1rem 1.3rem;
+            }
+        }
+
+        .price-label {
+            cursor: pointer;
+            padding: .5rem;
+        }
+
+        .tv {
+            border: 1px solid $light-blue;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: .5rem;
+            transition: all 0.5s ease;
+
+            &:hover {
+                background-color: $green;
+                cursor: pointer;
+            }
+        }
+
+        .tv-label {
+            padding: 1rem 5rem;
+            text-transform: capitalize;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        input[type="radio"] {
+           position: absolute;
+           left: -9999px; 
+        }
+    }
+
+    select {
+        border-radius: 5px;
+        font-family: $main-font-stack;
+        font-size: 1.1rem;
+        padding: .2rem;
+        margin-left: 1rem;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}

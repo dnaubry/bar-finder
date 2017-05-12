@@ -1,0 +1,168 @@
+@import url("https://fonts.googleapis.com/css?family=Chonburi|Fjord+One");
+/* Colors */
+/* Fonts */
+html, body {
+  background-color: #2A2A30;
+  margin: 0;
+  padding: 0; }
+
+button {
+  background-color: #E1CD94;
+  border: 1px solid #E0E6EB;
+  border-radius: 5px;
+  color: #2A2A30;
+  font-family: "Chonburi", serif;
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: .1rem;
+  margin: 4rem auto;
+  padding: 1rem 1.5rem;
+  transition: all 0.5s ease; }
+  button:hover {
+    background-color: #2A2A30;
+    color: #E1CD94;
+    cursor: pointer; }
+
+.wrapper {
+  border: 1px dashed #E1CD94;
+  border-radius: 5px;
+  margin: 5rem auto;
+  padding-bottom: 3rem; }
+  @media (min-width: 580px) {
+    .wrapper {
+      width: 90%; } }
+  @media (min-width: 800px) {
+    .wrapper {
+      width: 80%; } }
+  @media (min-width: 1200px) {
+    .wrapper {
+      width: 70%; } }
+
+.site-header {
+  position: relative;
+  top: -65px;
+  left: 20px;
+  width: 600px; }
+  .site-header h1 {
+    color: #E0E6EB;
+    font-family: "Chonburi", serif;
+    font-size: 3rem;
+    letter-spacing: .2rem;
+    text-align: center;
+    background-color: #2A2A30; }
+
+.main-content {
+  position: relative;
+  top: -45px;
+  margin-bottom: -45px; }
+
+.question {
+  color: #E0E6EB;
+  font-family: "Fjord One", serif;
+  font-size: 1.2rem;
+  text-align: center;
+  padding-bottom: 2rem;
+  width: 100%; }
+  .question p {
+    padding-bottom: 1rem; }
+  .question__choices {
+    display: inline-block;
+    width: 300px; }
+    .question__choices .drink-label {
+      padding: .7rem;
+      text-transform: capitalize; }
+      .question__choices .drink-label:hover {
+        background-color: #3E4838;
+        border: 1px solid #E0E6EB;
+        border-radius: 5px;
+        cursor: pointer; }
+    .question__choices--columns {
+      float: left;
+      width: 50%; }
+    .question__choices .price {
+      background-color: #3E4838;
+      border: 1px solid #E0E6EB;
+      float: left;
+      padding: 1rem;
+      transition: all 0.5s ease; }
+      .question__choices .price:first-of-type {
+        border-radius: 5px 0 0 5px; }
+      .question__choices .price:last-of-type {
+        border-radius: 0 5px 5px 0; }
+      .question__choices .price:hover {
+        background-color: #2A2A30; }
+      .question__choices .price label {
+        font-size: 1.3rem;
+        padding: 1rem 1.3rem; }
+    .question__choices .price-label {
+      cursor: pointer;
+      padding: .5rem; }
+    .question__choices .tv {
+      border: 1px solid #E0E6EB;
+      border-radius: 5px;
+      padding: 1rem;
+      margin: .5rem;
+      transition: all 0.5s ease; }
+      .question__choices .tv:hover {
+        background-color: #3E4838;
+        cursor: pointer; }
+    .question__choices .tv-label {
+      padding: 1rem 5rem;
+      text-transform: capitalize; }
+      .question__choices .tv-label:hover {
+        cursor: pointer; }
+    .question__choices input[type="radio"] {
+      position: absolute;
+      left: -9999px; }
+  .question select {
+    border-radius: 5px;
+    font-family: "Fjord One", serif;
+    font-size: 1.1rem;
+    padding: .2rem;
+    margin-left: 1rem; }
+    .question select:hover {
+      cursor: pointer; }
+
+.results {
+  border-top: 1px dashed #E1CD94;
+  margin: 1rem auto;
+  width: 60%; }
+  .results .result {
+    background-color: #BFB7AE;
+    border-radius: 5px;
+    color: #2A2A30;
+    font-family: "Fjord One", serif;
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 2rem 1rem;
+    padding: 1rem; }
+    .results .result::after {
+      content: "";
+      clear: both;
+      display: table; }
+    .results .result__name {
+      font-family: "Chonburi", serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: .05rem;
+      padding-bottom: 1rem; }
+    .results .result__column {
+      display: inline-block; }
+      .results .result__column--left {
+        text-align: right;
+        padding-right: .2rem; }
+      .results .result__column--right {
+        text-align: left;
+        padding-left: .2rem; }
+  .results ul {
+    list-style: none;
+    margin: 0;
+    padding: 0; }
+    .results ul li {
+      margin-bottom: .2rem;
+      text-transform: capitalize; }
+      .results ul li span {
+        font-weight: 700; }
+
+.retry {
+  text-align: center; }
