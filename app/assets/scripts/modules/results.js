@@ -18,9 +18,9 @@ function createResultsMessage () {
     results = document.querySelector('.results');
 
   if (results.firstChild) {
-    questionEl.innerHTML = 'Here are your bar options. Go drink!';
+    questionEl.innerHTML = '<p class="question__text">Here are your bar options. Go drink!</p>';
   } else {
-    questionEl.innerHTML = 'You chose poorly. Try again.';
+    questionEl.innerHTML = '<p class="question__text">You chose poorly. Try again.</p>';
   }
 }
 

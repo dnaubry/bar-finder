@@ -1,9 +1,9 @@
 import { filterBars, displayBars } from '../App';
-import bars from './bars';
+import barList from '../../data/bars.json';
 import { createResultsContainer, createResultsMessage } from './results';
-import { insertRetryButton } from './buttons';
+import { insertRetryButton } from './retry';
 
-
+const bars = [...barList.bars];
 function insertDrinkQuestion() {
   const questionEl = document.querySelector('.question'),
     drinks = ['beer', 'cider', 'wine', 'cocktails'],
@@ -39,6 +39,7 @@ function insertNeighborhoodQuestion() {
     allNeighborhoods.push(bars[i].neighborhood);
   }
   allNeighborhoods = Array.from(new Set(allNeighborhoods));
+  allNeighborhoods = allNeighborhoods.sort();
 
   const context = {
       neighborhoods: allNeighborhoods
@@ -88,7 +89,7 @@ function insertPriceQuestion() {
 
 function insertTVQuestion() {
   const questionEl = document.querySelector('.question'),
-    tvs = ['no', 'yes'],
+    tvs = ['no', 'yes', 'no-yes'],
     tvsTemplate = require('../templates/tvs.hbs'),
     context = {
       tvs: tvs
@@ -114,4 +115,4 @@ function insertTVQuestion() {
   }
 }
 
-export { insertDrinkQuestion, insertNeighborhoodQuestion, insertPriceQuestion, insertTVQuestion };
+export { insertDrinkQuestion };

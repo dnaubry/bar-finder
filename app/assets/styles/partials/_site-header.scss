@@ -1,8 +1,11 @@
 .site-header {
-    position: relative;
-    top: -65px;
-    left: 20px;
-    width: 600px;
+    
+    @include atMedium {
+        position: relative;
+        top: -65px;
+        left: 20px;
+        width: 600px;
+    }
 
     h1 {
         color: $light-blue;

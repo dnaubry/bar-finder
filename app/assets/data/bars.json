@@ -1,0 +1,88 @@
+{
+    "bars": [
+         {
+            "name": "Begyle Brewing",
+            "address": "1800 W Cuyler Ave, Chicago, IL 60613",
+            "latitude": 41.955405,
+            "longitude": -87.674522,
+            "neighborhood": "North Center",
+            "speciality": "beer",
+            "tv": "no",
+            "price": "$",
+            "priceRange": "low-mid-high",
+            "website": "http://www.begylebrewing.com/"
+        },
+        {
+            "name": "Dovetail Brewery",
+            "address": "1800 W Belle Plaine Ave, Chicago, IL 60613",
+            "latitude": 41.956299,
+            "longitude": -87.674547,
+            "neighborhood": "North Center",
+            "speciality": "beer",
+            "tv": "no",
+            "price": "$",
+            "priceRange": "low-mid-high",
+            "website": "http://dovetailbrewery.com/"
+        },
+        {
+            "name": "Half Acre",
+            "address": "4257 N Lincoln Ave, Chicago, IL 60618",
+            "latitude": 41.959342,
+            "longitude": -87.681947,
+            "neighborhood": "North Center",
+            "speciality": "beer",
+            "tv": "no",
+            "price": "$",
+            "priceRange": "low-mid-high",
+            "website": "http://www.halfacrebeer.com/"
+        },
+        {
+            "name": "Hopleaf",
+            "address": "5148 N Clark St, Chicago, IL 60640",
+            "latitude": 41.975821,
+            "longitude": -87.668603,
+            "neighborhood": "Andersonville",
+            "speciality": "beer",
+            "tv": "no",
+            "price": "$$",
+            "priceRange": "mid-high",
+            "website": "http://www.hopleafbar.com/"
+        },
+        {
+            "name": "The Barrelhouse Flat",
+            "address": "2624 N Lincoln Ave, Chicago, IL 60614",
+            "latitude": 41.929468,
+            "longitude": -87.654754,
+            "neighborhood": "Lincoln Park",
+            "speciality": "cocktails",
+            "tv": "no",
+            "price": "$$$",
+            "priceRange": "high",
+            "website": "http://www.barrelhouseflat.com/"
+        },
+        {
+            "name": "The Grafton Pub & Grill",
+            "address": "4530 N Lincoln Ave, Chicago, IL 60625",
+            "latitude": 41.963968,
+            "longitude": -87.685766,
+            "neighborhood": "Lincoln Square",
+            "speciality": "beer",
+            "tv": "yes",
+            "price": "$$",
+            "priceRange": "mid-high",
+            "website": "http://www.thegrafton.com/"
+        },
+        {
+            "name": "The Northman",
+            "address": "4337 N Lincoln Ave, Chicago, IL 60618",
+            "latitude": 41.960620,
+            "longitude": -87.683024,
+            "neighborhood": "Lincoln Square",
+            "speciality": "cider",
+            "tv": "no",
+            "price": "$$",
+            "priceRange": "mid-high",
+            "website": "http://www.thenorthman.com/"
+        }
+    ]
+}

@@ -22,7 +22,8 @@ module.exports = {
               loader: 'handlebars-loader',
               test: /\.hbs$/,
               exclude: /node_modules/
-            }
+            },
+            { test: /\.json$/, loader: 'json-loader' }
         ]
     }
 }

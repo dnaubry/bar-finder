@@ -1,5 +1,23 @@
 .main-content {
-    position: relative;
-    top: -45px;
-    margin-bottom: -45px;
+   width: 97%;
+   margin: 0 auto;
+
+    @include atSmall {
+        width: 95%;
+    }
+
+    @include atMedium {
+        position: relative;
+        top: -45px;
+        margin: 0 auto -45px;
+        width: 80%;
+    }
+
+    @include atLarge {
+        width: 70%;
+    }
+
+    @include atExtraLarge {
+        width: 60%;
+    }
 }

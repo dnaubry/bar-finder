@@ -1,22 +1,7 @@
-import { resetBarSearch } from '../App';
-import { insertDrinkQuestion } from './questions';
+import { resetBarSearch, removeMapContainer } from '../App';
 import { removeResultsContainer } from './results';
+import { insertStartButton } from './start';
 
-function insertStartButton() {
-  const questionEl = document.querySelector('.question');
-
-  questionEl.innerHTML = `
-    <p>Select options to the questions to find a bar to visit.</p>
-
-    <button id="start">Start</button>`;
-
-  addStartEvent();
-
-  function addStartEvent() {
-    const startBtn = document.getElementById('start');
-    startBtn.addEventListener('click', insertDrinkQuestion);
-  }
-}
 
 function insertRetryButton() {
   const wrapperEl = document.querySelector('.wrapper'),
@@ -24,7 +9,7 @@ function insertRetryButton() {
 
   retryEl.classList.add('retry');
   retryEl.innerHTML = `
-    <button id="retry">Retry</button>`;
+    <button id="retry">Start Over</button>`;
   wrapperEl.insertBefore(retryEl, null);
 
   addRetryEvent();
@@ -33,6 +18,7 @@ function insertRetryButton() {
     const retryBtn = document.getElementById('retry');
     retryBtn.addEventListener('click', function() {
       removeResultsContainer();
+      removeMapContainer();
       removeRetryButton();
       insertStartButton();
       resetBarSearch();
@@ -47,5 +33,5 @@ function removeRetryButton() {
   wrapperEl.removeChild(retryEl);
 }
 
-export { insertStartButton, insertRetryButton, removeRetryButton };
+export { insertRetryButton, removeRetryButton };
 

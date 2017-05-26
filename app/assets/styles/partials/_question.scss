@@ -1,34 +1,59 @@
 .question {
     color: $light-blue;
     font-family: $main-font-stack;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     text-align: center;
-    padding-bottom: 2rem;
+    margin: 3rem 0;
     width: 100%;
 
-    p {
-        padding-bottom: 1rem;
+    @include atMedium {
+            font-size: 1.2rem;
+    }
+
+    &__text {
+        padding: 1rem;
+
+        @include atMedium {
+            padding: 2rem;
+        }
     }
 
     &__choices {
         display: inline-block;
-        width: 300px;
 
-       .drink-label {
-           padding: .7rem;
-           text-transform: capitalize;
-
-           &:hover {
+        p {
             background-color: $green;
             border: 1px solid $light-blue;
             border-radius: 5px;
-            cursor: pointer;
+            margin: 1rem .5rem;
+            padding: 1.5rem 0;
+            width: 170px;
+
+            @include atMedium {
+                width: 145px;
+            }
+
+            &:hover {
+                background-color: $dark-gray;
+            }
         }
+
+       .drink-label {
+            padding: 1.5rem 2rem;
+            text-transform: capitalize;
+
+            &:hover {
+                cursor: pointer;
+            }
         }
 
         &--columns {
             float: left;
-            width: 50%;
+            width: 47%;
+
+            &:first-of-type {
+                margin-right: .5rem;
+            }
         }
 
         .price {
@@ -62,14 +87,15 @@
         }
 
         .tv {
+            background-color: $green;
             border: 1px solid $light-blue;
             border-radius: 5px;
             padding: 1rem;
-            margin: .5rem;
+            margin: 1rem .5rem;
             transition: all 0.5s ease;
 
             &:hover {
-                background-color: $green;
+                background-color: $dark-gray;
                 cursor: pointer;
             }
         }

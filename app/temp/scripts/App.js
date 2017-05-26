@@ -264,7 +264,7 @@ module.exports = exports['default'];
 
 // Create a simple path alias to allow browserify to resolve
 // the runtime on a supported path.
-module.exports = __webpack_require__(14)['default'];
+module.exports = __webpack_require__(16)['default'];
 
 
 /***/ }),
@@ -277,27 +277,30 @@ module.exports = __webpack_require__(14)['default'];
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.resetBarSearch = exports.displayBars = exports.filterBars = undefined;
+exports.removeMapContainer = exports.resetBarSearch = exports.displayBars = exports.filterBars = undefined;
 
-var _bars = __webpack_require__(4);
+var _bars = __webpack_require__(5);
 
 var _bars2 = _interopRequireDefault(_bars);
 
-var _buttons = __webpack_require__(5);
+var _keys = __webpack_require__(9);
+
+var _keys2 = _interopRequireDefault(_keys);
+
+var _start = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var barSearch = [].concat(_toConsumableArray(_bars2.default)),
+var barSearch = [].concat(_toConsumableArray(_bars2.default.bars)),
     matchedBars = void 0;
 
-(0, _buttons.insertStartButton)();
+(0, _start.insertStartButton)();
 
 function findBars(criteria) {
   barSearch = [].concat(_toConsumableArray(barSearch.filter(function (bar) {
     var regex = new RegExp(criteria, 'gi');
-    console.log(regex);
     return bar.speciality.match(regex) || bar.neighborhood.match(regex) || bar.priceRange.match(regex) || bar.tv.match(regex);
   })));
   return barSearch;
@@ -315,6 +318,8 @@ function displayBars() {
   var html = matchedBars.map(function (bar) {
     context = {
       name: bar.name,
+      website: bar.website,
+      address: bar.address.slice(0, bar.address.indexOf(',')),
       neighborhood: bar.neighborhood,
       speciality: bar.speciality,
       price: bar.price,
@@ -324,15 +329,152 @@ function displayBars() {
     return displayResult;
   }).join('');
   results.innerHTML = html;
+  createMapContainer();
+  initMap();
 }
 
 function resetBarSearch() {
-  barSearch = [].concat(_toConsumableArray(_bars2.default));
+  barSearch = [].concat(_toConsumableArray(_bars2.default.bars));
 }
+
+function initMap() {
+  var locations = [],
+      loc = void 0;
+  for (var _i = 0; _i < matchedBars.length; _i++) {
+    loc = { lat: matchedBars[_i].latitude, lng: matchedBars[_i].longitude };
+    locations.push(loc);
+  }
+  var map = new google.maps.Map(document.querySelector('.map'), {
+    zoom: 14,
+    center: locations[0],
+    styles: [{
+      'featureType': 'administrative',
+      'elementType': 'all',
+      'stylers': [{
+        'visibility': 'on'
+      }]
+    }, {
+      'featureType': 'administrative.country',
+      'elementType': 'all',
+      'stylers': [{
+        'visibility': 'on'
+      }]
+    }, {
+      'featureType': 'landscape',
+      'elementType': 'all',
+      'stylers': [{
+        'visibility': 'simplified'
+      }]
+    }, {
+      'featureType': 'poi',
+      'elementType': 'all',
+      'stylers': [{
+        'visibility': 'off'
+      }]
+    }, {
+      'featureType': 'road',
+      'elementType': 'all',
+      'stylers': [{
+        'visibility': 'on'
+      }]
+    }, {
+      'featureType': 'road',
+      'elementType': 'labels',
+      'stylers': [{
+        'visibility': 'simplified'
+      }]
+    }, {
+      'featureType': 'road.highway',
+      'elementType': 'all',
+      'stylers': [{
+        'visibility': 'off'
+      }]
+    }, {
+      'featureType': 'road.highway',
+      'elementType': 'geometry',
+      'stylers': [{
+        'visibility': 'on'
+      }]
+    }, {
+      'featureType': 'road.local',
+      'elementType': 'all',
+      'stylers': [{
+        'visibility': 'on'
+      }]
+    }, {
+      'featureType': 'transit',
+      'elementType': 'all',
+      'stylers': [{
+        'visibility': 'off'
+      }]
+    }, {
+      'featureType': 'transit.line',
+      'elementType': 'geometry',
+      'stylers': [{
+        'color': '#3f518c'
+      }]
+    }, {
+      'featureType': 'water',
+      'elementType': 'all',
+      'stylers': [{
+        'visibility': 'simplified'
+      }, {
+        'color': '#84afa3'
+      }, {
+        'lightness': 52
+      }]
+    }]
+  });
+
+  var infowindow = new google.maps.InfoWindow();
+
+  var marker = void 0,
+      i = void 0,
+      content = void 0;
+  for (i = 0; i < locations.length; i++) {
+    marker = new google.maps.Marker({
+      position: locations[i],
+      map: map,
+      content: '\n      <div class="infowindow-content">\n        <p><span>' + matchedBars[i].name + '</span></p>\n        <p><span>Address:</span> ' + matchedBars[i].address + '</p>\n        <p><a href="https://www.google.com/maps/dir/Current+Location/' + matchedBars[i].address + '" target="_blank">Directions</a> (opens in Google Maps)\n      </div>'
+    });
+
+    google.maps.event.addListener(marker, 'click', function (marker, i) {
+      return function () {
+        infowindow.setContent(marker.content);
+        infowindow.open(map, marker);
+      };
+    }(marker, i));
+  }
+}
+
+function createMapContainer() {
+  var map = document.createElement('div'),
+      position = document.querySelector('.main-content');
+
+  map.classList.add('map');
+  position.appendChild(map);
+}
+
+function removeMapContainer() {
+  var map = document.querySelector('.map'),
+      mainContent = document.querySelector('.main-content');
+
+  mainContent.removeChild(map);
+}
+
+function loadScript() {
+  var script = document.createElement('script');
+  script.src = 'https://maps.googleapis.com/maps/api/js?key=' + _keys2.default.keys[0].googleMaps;
+
+  document.body.appendChild(script);
+}
+
+window.onload = loadScript;
 
 exports.filterBars = filterBars;
 exports.displayBars = displayBars;
 exports.resetBarSearch = resetBarSearch;
+exports.removeMapContainer = removeMapContainer;
 
 /***/ }),
 /* 4 */
@@ -344,67 +486,14 @@ exports.resetBarSearch = resetBarSearch;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var bars = [{
-  name: 'Hopleaf',
-  neighborhood: 'Andersonville',
-  speciality: 'beer',
-  tv: 'no',
-  price: '$$',
-  priceRange: 'mid-high'
-}, {
-  name: 'Half Acre',
-  neighborhood: 'Lincoln Square',
-  speciality: 'beer',
-  tv: 'no',
-  price: '$',
-  priceRange: 'low-mid-high'
-}, {
-  name: 'Begyle',
-  neighborhood: 'Ravenswood',
-  speciality: 'beer',
-  tv: 'no',
-  price: '$',
-  priceRange: 'low-mid-high'
-}, {
-  name: 'The Northman',
-  neighborhood: 'Lincoln Square',
-  speciality: 'cider',
-  tv: 'no',
-  price: '$$',
-  priceRange: 'mid-high'
-}, {
-  name: 'The Barrelhouse Flat',
-  neighborhood: 'Lincoln Park',
-  speciality: 'cocktails',
-  tv: 'no',
-  price: '$$$',
-  priceRange: 'high'
-}];
+exports.insertStartButton = undefined;
 
-exports.default = bars;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.removeRetryButton = exports.insertRetryButton = exports.insertStartButton = undefined;
-
-var _App = __webpack_require__(3);
-
-var _questions = __webpack_require__(9);
-
-var _results = __webpack_require__(6);
+var _questions = __webpack_require__(10);
 
 function insertStartButton() {
   var questionEl = document.querySelector('.question');
 
-  questionEl.innerHTML = '\n    <p>Select options to the questions to find a bar to visit.</p>\n\n    <button id="start">Start</button>';
+  questionEl.innerHTML = '\n    <p class="question__text">Select options to the questions to find a bar to visit.</p>\n\n    <button id="start">Start</button>';
 
   addStartEvent();
 
@@ -414,37 +503,100 @@ function insertStartButton() {
   }
 }
 
-function insertRetryButton() {
-  var wrapperEl = document.querySelector('.wrapper'),
-      retryEl = document.createElement('div');
-
-  retryEl.classList.add('retry');
-  retryEl.innerHTML = '\n    <button id="retry">Retry</button>';
-  wrapperEl.insertBefore(retryEl, null);
-
-  addRetryEvent();
-
-  function addRetryEvent() {
-    var retryBtn = document.getElementById('retry');
-    retryBtn.addEventListener('click', function () {
-      (0, _results.removeResultsContainer)();
-      removeRetryButton();
-      insertStartButton();
-      (0, _App.resetBarSearch)();
-    });
-  }
-}
-
-function removeRetryButton() {
-  var retryEl = document.querySelector('.retry'),
-      wrapperEl = document.querySelector('.wrapper');
-
-  wrapperEl.removeChild(retryEl);
-}
-
 exports.insertStartButton = insertStartButton;
-exports.insertRetryButton = insertRetryButton;
-exports.removeRetryButton = removeRetryButton;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+module.exports = {
+	"bars": [
+		{
+			"name": "Begyle Brewing",
+			"address": "1800 W Cuyler Ave, Chicago, IL 60613",
+			"latitude": 41.955405,
+			"longitude": -87.674522,
+			"neighborhood": "North Center",
+			"speciality": "beer",
+			"tv": "no",
+			"price": "$",
+			"priceRange": "low-mid-high",
+			"website": "http://www.begylebrewing.com/"
+		},
+		{
+			"name": "Dovetail Brewery",
+			"address": "1800 W Belle Plaine Ave, Chicago, IL 60613",
+			"latitude": 41.956299,
+			"longitude": -87.674547,
+			"neighborhood": "North Center",
+			"speciality": "beer",
+			"tv": "no",
+			"price": "$",
+			"priceRange": "low-mid-high",
+			"website": "http://dovetailbrewery.com/"
+		},
+		{
+			"name": "Half Acre",
+			"address": "4257 N Lincoln Ave, Chicago, IL 60618",
+			"latitude": 41.959342,
+			"longitude": -87.681947,
+			"neighborhood": "North Center",
+			"speciality": "beer",
+			"tv": "no",
+			"price": "$",
+			"priceRange": "low-mid-high",
+			"website": "http://www.halfacrebeer.com/"
+		},
+		{
+			"name": "Hopleaf",
+			"address": "5148 N Clark St, Chicago, IL 60640",
+			"latitude": 41.975821,
+			"longitude": -87.668603,
+			"neighborhood": "Andersonville",
+			"speciality": "beer",
+			"tv": "no",
+			"price": "$$",
+			"priceRange": "mid-high",
+			"website": "http://www.hopleafbar.com/"
+		},
+		{
+			"name": "The Barrelhouse Flat",
+			"address": "2624 N Lincoln Ave, Chicago, IL 60614",
+			"latitude": 41.929468,
+			"longitude": -87.654754,
+			"neighborhood": "Lincoln Park",
+			"speciality": "cocktails",
+			"tv": "no",
+			"price": "$$$",
+			"priceRange": "high",
+			"website": "http://www.barrelhouseflat.com/"
+		},
+		{
+			"name": "The Grafton Pub & Grill",
+			"address": "4530 N Lincoln Ave, Chicago, IL 60625",
+			"latitude": 41.963968,
+			"longitude": -87.685766,
+			"neighborhood": "Lincoln Square",
+			"speciality": "beer",
+			"tv": "yes",
+			"price": "$$",
+			"priceRange": "mid-high",
+			"website": "http://www.thegrafton.com/"
+		},
+		{
+			"name": "The Northman",
+			"address": "4337 N Lincoln Ave, Chicago, IL 60618",
+			"latitude": 41.96062,
+			"longitude": -87.683024,
+			"neighborhood": "Lincoln Square",
+			"speciality": "cider",
+			"tv": "no",
+			"price": "$$",
+			"priceRange": "mid-high",
+			"website": "http://www.thenorthman.com/"
+		}
+	]
+};
 
 /***/ }),
 /* 6 */
@@ -476,9 +628,9 @@ function createResultsMessage() {
       results = document.querySelector('.results');
 
   if (results.firstChild) {
-    questionEl.innerHTML = 'Here are your bar options. Go drink!';
+    questionEl.innerHTML = '<p class="question__text">Here are your bar options. Go drink!</p>';
   } else {
-    questionEl.innerHTML = 'You chose poorly. Try again.';
+    questionEl.innerHTML = '<p class="question__text">You chose poorly. Try again.</p>';
   }
 }
 
@@ -505,11 +657,11 @@ var _exception = __webpack_require__(1);
 
 var _exception2 = _interopRequireDefault(_exception);
 
-var _helpers = __webpack_require__(17);
+var _helpers = __webpack_require__(19);
 
-var _decorators = __webpack_require__(15);
+var _decorators = __webpack_require__(17);
 
-var _logger = __webpack_require__(25);
+var _logger = __webpack_require__(27);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -608,7 +760,9 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 
   return "<div class=\"result\">\r\n    <div class=\"result__name\">"
     + alias4(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper)))
-    + "</div>\r\n    <div class=\"result__column result__column--left\">\r\n        <ul>\r\n        <li><span>Neighborhood</span></li>\r\n        <li><span>Specialty</span></li>\r\n        <li><span>Average Drink Price</span></li>\r\n        <li><span>TVs</span></li>\r\n        </ul>\r\n    </div>\r\n    <div class=\"result__column result__column--right\">\r\n        <ul>\r\n        <li>"
+    + "</div>\r\n    <div class=\"result__column result__column--left\">\r\n        <ul>\r\n        <li><span>Address</span></li>\r\n        <li><span>Neighborhood</span></li>\r\n        <li><span>Known for</span></li>\r\n        <li><span>Average Drink Price</span></li>\r\n        <li><span>TVs</span></li>\r\n        </ul>\r\n    </div>\r\n    <div class=\"result__column result__column--right\">\r\n        <ul>\r\n        <li>"
+    + alias4(((helper = (helper = helpers.address || (depth0 != null ? depth0.address : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"address","hash":{},"data":data}) : helper)))
+    + "</li>\r\n        <li>"
     + alias4(((helper = (helper = helpers.neighborhood || (depth0 != null ? depth0.neighborhood : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"neighborhood","hash":{},"data":data}) : helper)))
     + "</li>\r\n        <li>"
     + alias4(((helper = (helper = helpers.speciality || (depth0 != null ? depth0.speciality : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"speciality","hash":{},"data":data}) : helper)))
@@ -616,11 +770,27 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
     + alias4(((helper = (helper = helpers.price || (depth0 != null ? depth0.price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"price","hash":{},"data":data}) : helper)))
     + "</li>\r\n        <li>"
     + alias4(((helper = (helper = helpers.tv || (depth0 != null ? depth0.tv : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"tv","hash":{},"data":data}) : helper)))
-    + "</li>\r\n        </ul>\r\n    </div>\r\n</div>";
+    + "</li>\r\n        </ul>\r\n    </div>\r\n    <div class=\"result__website\"><a href=\""
+    + alias4(((helper = (helper = helpers.website || (depth0 != null ? depth0.website : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"website","hash":{},"data":data}) : helper)))
+    + "\" target=\"_blank\">"
+    + alias4(((helper = (helper = helpers.website || (depth0 != null ? depth0.website : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"website","hash":{},"data":data}) : helper)))
+    + "</a></div>\r\n</div>";
 },"useData":true});
 
 /***/ }),
 /* 9 */
+/***/ (function(module, exports) {
+
+module.exports = {
+	"keys": [
+		{
+			"googleMaps": "AIzaSyDhfiSJwTbI0A7eOqwmgThrICDoPuNcEaw"
+		}
+	]
+};
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -629,24 +799,27 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.insertTVQuestion = exports.insertPriceQuestion = exports.insertNeighborhoodQuestion = exports.insertDrinkQuestion = undefined;
+exports.insertDrinkQuestion = undefined;
 
 var _App = __webpack_require__(3);
 
-var _bars = __webpack_require__(4);
+var _bars = __webpack_require__(5);
 
 var _bars2 = _interopRequireDefault(_bars);
 
 var _results = __webpack_require__(6);
 
-var _buttons = __webpack_require__(5);
+var _retry = __webpack_require__(11);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var bars = [].concat(_toConsumableArray(_bars2.default.bars));
 function insertDrinkQuestion() {
   var questionEl = document.querySelector('.question'),
       drinks = ['beer', 'cider', 'wine', 'cocktails'],
-      drinksTemplate = __webpack_require__(10),
+      drinksTemplate = __webpack_require__(12),
       context = {
     drinks: drinks
   },
@@ -670,14 +843,15 @@ function insertDrinkQuestion() {
 
 function insertNeighborhoodQuestion() {
   var questionEl = document.querySelector('.question'),
-      barsLength = _bars2.default.length,
-      neighborhoodsTemplate = __webpack_require__(11);
+      barsLength = bars.length,
+      neighborhoodsTemplate = __webpack_require__(13);
   var allNeighborhoods = [];
 
   for (var i = 0; i < barsLength; i++) {
-    allNeighborhoods.push(_bars2.default[i].neighborhood);
+    allNeighborhoods.push(bars[i].neighborhood);
   }
   allNeighborhoods = Array.from(new Set(allNeighborhoods));
+  allNeighborhoods = allNeighborhoods.sort();
 
   var context = {
     neighborhoods: allNeighborhoods
@@ -700,7 +874,7 @@ function insertNeighborhoodQuestion() {
 
 function insertPriceQuestion() {
   var questionEl = document.querySelector('.question'),
-      priceTemplate = __webpack_require__(12),
+      priceTemplate = __webpack_require__(14),
       context = {
     low: 'low',
     mid: 'mid',
@@ -727,8 +901,8 @@ function insertPriceQuestion() {
 
 function insertTVQuestion() {
   var questionEl = document.querySelector('.question'),
-      tvs = ['no', 'yes'],
-      tvsTemplate = __webpack_require__(13),
+      tvs = ['no', 'yes', 'no-yes'],
+      tvsTemplate = __webpack_require__(15),
       context = {
     tvs: tvs
   },
@@ -747,19 +921,66 @@ function insertTVQuestion() {
         (0, _results.createResultsContainer)();
         (0, _App.displayBars)();
         (0, _results.createResultsMessage)();
-        (0, _buttons.insertRetryButton)();
+        (0, _retry.insertRetryButton)();
       });
     }
   }
 }
 
 exports.insertDrinkQuestion = insertDrinkQuestion;
-exports.insertNeighborhoodQuestion = insertNeighborhoodQuestion;
-exports.insertPriceQuestion = insertPriceQuestion;
-exports.insertTVQuestion = insertTVQuestion;
 
 /***/ }),
-/* 10 */
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.removeRetryButton = exports.insertRetryButton = undefined;
+
+var _App = __webpack_require__(3);
+
+var _results = __webpack_require__(6);
+
+var _start = __webpack_require__(4);
+
+function insertRetryButton() {
+  var wrapperEl = document.querySelector('.wrapper'),
+      retryEl = document.createElement('div');
+
+  retryEl.classList.add('retry');
+  retryEl.innerHTML = '\n    <button id="retry">Start Over</button>';
+  wrapperEl.insertBefore(retryEl, null);
+
+  addRetryEvent();
+
+  function addRetryEvent() {
+    var retryBtn = document.getElementById('retry');
+    retryBtn.addEventListener('click', function () {
+      (0, _results.removeResultsContainer)();
+      (0, _App.removeMapContainer)();
+      removeRetryButton();
+      (0, _start.insertStartButton)();
+      (0, _App.resetBarSearch)();
+    });
+  }
+}
+
+function removeRetryButton() {
+  var retryEl = document.querySelector('.retry'),
+      wrapperEl = document.querySelector('.wrapper');
+
+  wrapperEl.removeChild(retryEl);
+}
+
+exports.insertRetryButton = insertRetryButton;
+exports.removeRetryButton = removeRetryButton;
+
+/***/ }),
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -767,7 +988,7 @@ function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj);
 module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "<p>What are you looking to drink?</p>\r\n<div class=\"question__choices\">\r\n    <div class=\"question__choices--columns\">\r\n    <p>\r\n        <input class=\"drink-radio\" name=\"speciality\" type=\"radio\" id=\"radio-"
+  return "<p class=\"question__text\">What are you looking to drink?</p>\r\n<div class=\"question__choices\">\r\n    <div class=\"question__choices--columns\">\r\n    <p>\r\n        <input class=\"drink-radio\" name=\"speciality\" type=\"radio\" id=\"radio-"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.drinks : depth0)) != null ? stack1["0"] : stack1), depth0))
     + "\" value=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.drinks : depth0)) != null ? stack1["0"] : stack1), depth0))
@@ -803,7 +1024,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 },"useData":true});
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -819,13 +1040,13 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "<p>Where in the city do you want to grab a drink?</p>\r\n<div class=\"neighborhoods\">\r\n    <label for=\"neighborhoods\">Neighborhoods:</label>\r\n    <select id=\"neighborhoods\">\r\n    <option value=\"\" disabled selected>Pick one!</option>\r\n"
+  return "<p class=\"question__text\">Where in the city do you want to grab a drink?</p>\r\n<div class=\"neighborhoods\">\r\n    <label for=\"neighborhoods\">Neighborhoods:</label>\r\n    <select id=\"neighborhoods\">\r\n    <option value=\"\" disabled selected>Pick one!</option>\r\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.neighborhoods : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "    </select>\r\n</div>";
 },"useData":true});
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -833,7 +1054,7 @@ function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj);
 module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "<p>What's the max you'd spend per drink?</p>\r\n    <div class=\"question__choices\">\r\n      <div class=\"price\">\r\n        <input name=\"price\" type=\"radio\" id=\"radio-low-price\" value=\""
+  return "<p class=\"question__text\">What's the max you'd spend per drink?</p>\r\n    <div class=\"question__choices\">\r\n      <div class=\"price\">\r\n        <input name=\"price\" type=\"radio\" id=\"radio-low-price\" value=\""
     + alias4(((helper = (helper = helpers.low || (depth0 != null ? depth0.low : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"low","hash":{},"data":data}) : helper)))
     + "\" />\r\n        <label class=\"price-label\" for=\"radio-low-price\">$</label>\r\n      </div>\r\n      <div class=\"price\">\r\n        <input name=\"price\" type=\"radio\" id=\"radio-mid-price\" value=\""
     + alias4(((helper = (helper = helpers.mid || (depth0 != null ? depth0.mid : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"mid","hash":{},"data":data}) : helper)))
@@ -843,7 +1064,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 },"useData":true});
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -851,7 +1072,7 @@ function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj);
 module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "<p>Should there be any TVs in the bar?</p>\r\n<div class=\"question__choices\">\r\n    <div class=\"tv\">\r\n        <input name=\"tv\" type=\"radio\" id=\"radio-tv-"
+  return "<p class=\"question__text\">Should there be any TVs in the bar?</p>\r\n<div class=\"question__choices\">\r\n    <div class=\"tv\">\r\n        <input name=\"tv\" type=\"radio\" id=\"radio-tv-"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.tvs : depth0)) != null ? stack1["0"] : stack1), depth0))
     + "\" value=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.tvs : depth0)) != null ? stack1["0"] : stack1), depth0))
@@ -859,7 +1080,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.tvs : depth0)) != null ? stack1["0"] : stack1), depth0))
     + "\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.tvs : depth0)) != null ? stack1["0"] : stack1), depth0))
-    + "</label>\r\n    </div>\r\n        <div class=\"tv\">\r\n        <input name=\"tv\" type=\"radio\" id=\"radio-tv-"
+    + "</label>\r\n    </div>\r\n    <div class=\"tv\">\r\n        <input name=\"tv\" type=\"radio\" id=\"radio-tv-"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.tvs : depth0)) != null ? stack1["1"] : stack1), depth0))
     + "\" value=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.tvs : depth0)) != null ? stack1["1"] : stack1), depth0))
@@ -867,11 +1088,17 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.tvs : depth0)) != null ? stack1["1"] : stack1), depth0))
     + "\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.tvs : depth0)) != null ? stack1["1"] : stack1), depth0))
-    + "</label>  \r\n    </div>\r\n</div>\r\n";
+    + "</label>  \r\n    </div>\r\n    <div class=\"tv\">\r\n        <input name=\"tv\" type=\"radio\" id=\"radio-tv-"
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.tvs : depth0)) != null ? stack1["2"] : stack1), depth0))
+    + "\" value=\""
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.tvs : depth0)) != null ? stack1["2"] : stack1), depth0))
+    + "\" />\r\n        <label class=\"tv-label\" for=\"radio-tv-"
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.tvs : depth0)) != null ? stack1["2"] : stack1), depth0))
+    + "\">Maybe</label>  \r\n    </div>\r\n</div>\r\n";
 },"useData":true});
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -893,7 +1120,7 @@ var base = _interopRequireWildcard(_handlebarsBase);
 // Each of these augment the Handlebars object. No need to setup here.
 // (This is done to easily share code between commonjs and browse envs)
 
-var _handlebarsSafeString = __webpack_require__(28);
+var _handlebarsSafeString = __webpack_require__(30);
 
 var _handlebarsSafeString2 = _interopRequireDefault(_handlebarsSafeString);
 
@@ -905,11 +1132,11 @@ var _handlebarsUtils = __webpack_require__(0);
 
 var Utils = _interopRequireWildcard(_handlebarsUtils);
 
-var _handlebarsRuntime = __webpack_require__(27);
+var _handlebarsRuntime = __webpack_require__(29);
 
 var runtime = _interopRequireWildcard(_handlebarsRuntime);
 
-var _handlebarsNoConflict = __webpack_require__(26);
+var _handlebarsNoConflict = __webpack_require__(28);
 
 var _handlebarsNoConflict2 = _interopRequireDefault(_handlebarsNoConflict);
 
@@ -944,7 +1171,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -956,7 +1183,7 @@ exports.registerDefaultDecorators = registerDefaultDecorators;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _decoratorsInline = __webpack_require__(16);
+var _decoratorsInline = __webpack_require__(18);
 
 var _decoratorsInline2 = _interopRequireDefault(_decoratorsInline);
 
@@ -967,7 +1194,7 @@ function registerDefaultDecorators(instance) {
 
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1003,7 +1230,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1015,31 +1242,31 @@ exports.registerDefaultHelpers = registerDefaultHelpers;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _helpersBlockHelperMissing = __webpack_require__(18);
+var _helpersBlockHelperMissing = __webpack_require__(20);
 
 var _helpersBlockHelperMissing2 = _interopRequireDefault(_helpersBlockHelperMissing);
 
-var _helpersEach = __webpack_require__(19);
+var _helpersEach = __webpack_require__(21);
 
 var _helpersEach2 = _interopRequireDefault(_helpersEach);
 
-var _helpersHelperMissing = __webpack_require__(20);
+var _helpersHelperMissing = __webpack_require__(22);
 
 var _helpersHelperMissing2 = _interopRequireDefault(_helpersHelperMissing);
 
-var _helpersIf = __webpack_require__(21);
+var _helpersIf = __webpack_require__(23);
 
 var _helpersIf2 = _interopRequireDefault(_helpersIf);
 
-var _helpersLog = __webpack_require__(22);
+var _helpersLog = __webpack_require__(24);
 
 var _helpersLog2 = _interopRequireDefault(_helpersLog);
 
-var _helpersLookup = __webpack_require__(23);
+var _helpersLookup = __webpack_require__(25);
 
 var _helpersLookup2 = _interopRequireDefault(_helpersLookup);
 
-var _helpersWith = __webpack_require__(24);
+var _helpersWith = __webpack_require__(26);
 
 var _helpersWith2 = _interopRequireDefault(_helpersWith);
 
@@ -1056,7 +1283,7 @@ function registerDefaultHelpers(instance) {
 
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1102,7 +1329,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1203,7 +1430,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1235,7 +1462,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1271,7 +1498,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1304,7 +1531,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1323,7 +1550,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1363,7 +1590,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1417,7 +1644,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1442,10 +1669,10 @@ exports['default'] = function (Handlebars) {
 module.exports = exports['default'];
 //# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL2xpYi9oYW5kbGViYXJzL25vLWNvbmZsaWN0LmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7O3FCQUNlLFVBQVMsVUFBVSxFQUFFOztBQUVsQyxNQUFJLElBQUksR0FBRyxPQUFPLE1BQU0sS0FBSyxXQUFXLEdBQUcsTUFBTSxHQUFHLE1BQU07TUFDdEQsV0FBVyxHQUFHLElBQUksQ0FBQyxVQUFVLENBQUM7O0FBRWxDLFlBQVUsQ0FBQyxVQUFVLEdBQUcsWUFBVztBQUNqQyxRQUFJLElBQUksQ0FBQyxVQUFVLEtBQUssVUFBVSxFQUFFO0FBQ2xDLFVBQUksQ0FBQyxVQUFVLEdBQUcsV0FBVyxDQUFDO0tBQy9CO0FBQ0QsV0FBTyxVQUFVLENBQUM7R0FDbkIsQ0FBQztDQUNIIiwiZmlsZSI6Im5vLWNvbmZsaWN0LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyogZ2xvYmFsIHdpbmRvdyAqL1xuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24oSGFuZGxlYmFycykge1xuICAvKiBpc3RhbmJ1bCBpZ25vcmUgbmV4dCAqL1xuICBsZXQgcm9vdCA9IHR5cGVvZiBnbG9iYWwgIT09ICd1bmRlZmluZWQnID8gZ2xvYmFsIDogd2luZG93LFxuICAgICAgJEhhbmRsZWJhcnMgPSByb290LkhhbmRsZWJhcnM7XG4gIC8qIGlzdGFuYnVsIGlnbm9yZSBuZXh0ICovXG4gIEhhbmRsZWJhcnMubm9Db25mbGljdCA9IGZ1bmN0aW9uKCkge1xuICAgIGlmIChyb290LkhhbmRsZWJhcnMgPT09IEhhbmRsZWJhcnMpIHtcbiAgICAgIHJvb3QuSGFuZGxlYmFycyA9ICRIYW5kbGViYXJzO1xuICAgIH1cbiAgICByZXR1cm4gSGFuZGxlYmFycztcbiAgfTtcbn1cbiJdfQ==
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31)))
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1759,7 +1986,7 @@ function executeDecorators(fn, prog, container, depths, data, blockParams) {
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1781,7 +2008,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports) {
 
 var g;

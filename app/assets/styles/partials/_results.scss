@@ -1,7 +1,6 @@
 .results {
     border-top: 1px dashed $yellow;
-    margin: 1rem auto;
-    width: 60%;
+    padding-top: 1.5rem;
 
     .result {
         @include clearfix;
@@ -10,19 +9,35 @@
         border-radius: 5px;
         color: $dark-gray;
         font-family: $main-font-stack;
-        font-size: 1.2rem;
+        font-size: 1rem;
         text-align: center;
-        margin: 2rem 1rem;
+        margin: 2rem 0;
         padding: 1rem;
 
+        @include atMedium {
+            font-size: 1.2rem;
+        }
+
         &__name {
-        font-family: $accent-font-stack;
-        font-size: 1.4rem;
-        font-weight: 700;
-        letter-spacing: .05rem;
-        padding-bottom: 1rem;
- 
-    }
+            font-family: $accent-font-stack;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: .05rem;
+            padding-bottom: 1rem;
+        }
+
+        &__website {
+            padding-top: 1rem;
+            
+            a {
+                color: $green;
+                text-transform: lowercase;
+
+                &:hover {
+                    color: $yellow;
+                }
+            }  
+        }
 
         &__column {
             display: inline-block;
