@@ -18,47 +18,50 @@
         }
     }
 
-    &__choices {
+    .drink-choices, .price-choices, .tv-choices {
         display: inline-block;
 
-        p {
+        div {
             background-color: $green;
             border: 1px solid $light-blue;
+            transition: all 0.5s ease;
+
+            &:hover {
+                background-color: $dark-gray;
+            }
+
+            label {
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .drink-choices {
+        height: 300px;
+        width: 400px;
+
+        div {
             border-radius: 5px;
-            margin: 1rem .5rem;
+            display: inline-block;
+            margin: .5rem;
             padding: 1.5rem 0;
             width: 170px;
 
             @include atMedium {
                 width: 145px;
             }
-
-            &:hover {
-                background-color: $dark-gray;
-            }
         }
 
        .drink-label {
             padding: 1.5rem 2rem;
             text-transform: capitalize;
+        }  
+    }
 
-            &:hover {
-                cursor: pointer;
-            }
-        }
-
-        &--columns {
-            float: left;
-            width: 47%;
-
-            &:first-of-type {
-                margin-right: .5rem;
-            }
-        }
-
-        .price {
-            background-color: $green;
-            border: 1px solid $light-blue;
+    .price-choices {
+        div {
             float: left;
             padding: 1rem;
             transition: all 0.5s ease;
@@ -71,51 +74,32 @@
                 border-radius: 0 5px 5px 0;
             }
 
-            &:hover {
-                background-color: $dark-gray;
-            }
-            
-            label {
+            .price-label {
                 font-size: 1.3rem;
                 padding: 1rem 1.3rem;
             }
         }
+    }
 
-        .price-label {
-            cursor: pointer;
-            padding: .5rem;
-        }
-
-        .tv {
-            background-color: $green;
-            border: 1px solid $light-blue;
+    .tv-choices {
+        div {
             border-radius: 5px;
             padding: 1rem;
             margin: 1rem .5rem;
-            transition: all 0.5s ease;
 
-            &:hover {
-                background-color: $dark-gray;
-                cursor: pointer;
-            }
-        }
-
-        .tv-label {
+            .tv-label {
             padding: 1rem 5rem;
             text-transform: capitalize;
-
-            &:hover {
-                cursor: pointer;
             }
         }
+    }
 
         input[type="radio"] {
            position: absolute;
            left: -9999px; 
         }
-    }
 
-    select {
+    .neighborhoods {
         border-radius: 5px;
         font-family: $main-font-stack;
         font-size: 1.1rem;

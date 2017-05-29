@@ -1,118 +1,121 @@
-import { filterBars, displayBars } from '../App';
 import barList from '../../data/bars.json';
-import { createResultsContainer, createResultsMessage } from './results';
-import { insertRetryButton } from './retry';
+import displayResults from './results';
 
-const bars = [...barList.bars];
-function insertDrinkQuestion() {
-  const questionEl = document.querySelector('.question'),
-    drinks = ['beer', 'cider', 'wine', 'cocktails'],
-    drinksTemplate = require('../templates/drinks.hbs'),
-    context = {
-      drinks: drinks
-    },
-    drinkOptions = drinksTemplate(context);
+// Array to hold matched bars as they are filtered
+let matchedBars = [];
 
-  questionEl.innerHTML = drinkOptions;
-  addDrinkEvents();
+// Get list of all bars
+const allBars = [...barList.bars],
+  numOfBars = allBars.length;
 
-  function addDrinkEvents() {
-    const drinks = document.querySelectorAll('[name="speciality"]'),
-      drinksLength = drinks.length;
+// Loop through all bars and push drink and neighborhood options into an array
+let drinks = [], neighborhoods = [];
+for (let i = 0; i < numOfBars; i++) {
+  drinks.push(allBars[i].drink);
+  neighborhoods.push(allBars[i].neighborhood);
+}
+// Remove duplicates and sort alphabetically
+drinks = (Array.from(new Set(drinks))).sort();
+neighborhoods = (Array.from(new Set(neighborhoods))).sort();
 
-    for (let i = 0; i < drinksLength; i++) {
-      drinks[i].addEventListener('click', function() {
-        filterBars.call(this);
-        insertNeighborhoodQuestion();
+// Array of objects containing the topics for the questions
+const topics = [
+  {
+    name: 'drinks',
+    options: drinks,
+    template: require('../templates/drinks.hbs')
+  },
+  {
+    name: 'neighborhoods',
+    options: neighborhoods,
+    template: require('../templates/neighborhoods.hbs')
+  },
+  {
+    name: 'prices',
+    options: ['low', 'mid', 'high'],
+    template: require('../templates/prices.hbs')
+  },
+  {
+    name: 'tvs',
+    options: ['no', 'yes'],
+    template: require('../templates/tvs.hbs')
+  }
+];
+
+function initFinder() {
+  // Set matchedBars to full list of bars
+  matchedBars = [...barList.bars];
+
+  // Insert text and start button
+  const question = document.querySelector('.question');
+  question.innerHTML = `
+    <p class="question__text">Select options to the questions to find a bar to visit.</p>
+    <button id="startBtn">Start</button>`;
+
+  // Add event listener to start button
+  const startBtn = document.getElementById('startBtn');
+  startBtn.addEventListener('click', function() {
+    // Insert question with the first question topic
+    insertQuestion.call(topics[0]);
+  });
+}
+
+// Filters bars by matching the criteria chosen
+function filterBars(criteria) {
+  matchedBars = [...matchedBars.filter(bar => {
+    const regex = new RegExp(criteria, 'gi');
+    return bar.drink.match(regex) ||
+          bar.neighborhood.match(regex) ||
+          bar.priceRange.match(regex) ||
+          bar.tv.match(regex);
+  })];
+  return matchedBars;
+}
+
+// Set matchedBars array equal to the filtered bars so it can be filtered further by the next question
+function findBars() {
+  matchedBars = filterBars(this.value);
+}
+
+// Inserts question and options using Handlebars template and the topics array
+// The counter is used to determine the index of which item from the topics array should be used when inserting a question
+function insertQuestion(topic) {
+  const question = document.querySelector('.question'),
+    name = this.name,
+    options = this.options,
+    template = this.template,
+    context = { options: options };
+
+  question.innerHTML = template(context);
+
+  // Keep track of how many times 'insertQuestion' is called
+  insertQuestion.count++;
+
+  // Add event listeners to question options
+  function events(name) {
+    const options = document.querySelectorAll(`.${name}`),
+      numOfOptions = options.length,
+      numOfTopics = topics.length;
+
+    for (let i = 0; i < numOfOptions; i++) {
+      options[i].addEventListener('change', function() {
+        // Call findBars() using .call(this) so this is the selected option
+        findBars.call(this);
+
+        // Checks insertQuestion.count to see if the count is less than the number of itmes in the topics array
+        if (insertQuestion.count < numOfTopics) {
+          // If there are more topics, insert next question
+          insertQuestion.call(topics[insertQuestion.count]);
+        } else {
+          // After the last question, display the results
+          displayResults();
+        }
       });
     }
   }
+  events(name);
 }
 
-function insertNeighborhoodQuestion() {
-  const questionEl = document.querySelector('.question'),
-    barsLength = bars.length,
-    neighborhoodsTemplate = require('../templates/neighborhoods.hbs');
-  let allNeighborhoods = [];
+insertQuestion.count = 0;
 
-  for (let i = 0; i < barsLength; i++) {
-    allNeighborhoods.push(bars[i].neighborhood);
-  }
-  allNeighborhoods = Array.from(new Set(allNeighborhoods));
-  allNeighborhoods = allNeighborhoods.sort();
-
-  const context = {
-      neighborhoods: allNeighborhoods
-    },
-    neighborhoodOptions = neighborhoodsTemplate(context);
-
-  questionEl.innerHTML = neighborhoodOptions;
-
-  addNeighborhoodsEvent();
-
-  function addNeighborhoodsEvent() {
-    const neighborhoods = document.getElementById('neighborhoods');
-
-    neighborhoods.addEventListener('change', function() {
-      filterBars.call(this);
-      insertPriceQuestion();
-    });
-  }
-}
-
-function insertPriceQuestion() {
-  const questionEl = document.querySelector('.question'),
-    priceTemplate = require('../templates/price.hbs'),
-    context = {
-      low: 'low',
-      mid: 'mid',
-      high: 'high'
-    },
-    priceOptions = priceTemplate(context);
-
-  questionEl.innerHTML = priceOptions;
-
-  addPricesEvent();
-
-  function addPricesEvent() {
-    const prices = document.querySelectorAll('[name="price"]'),
-      radioLength = prices.length;
-
-    for (let i = 0; i < radioLength; i++) {
-      prices[i].addEventListener('click', function() {
-        filterBars.call(this);
-        insertTVQuestion();
-      });
-    }
-  }
-}
-
-function insertTVQuestion() {
-  const questionEl = document.querySelector('.question'),
-    tvs = ['no', 'yes', 'no-yes'],
-    tvsTemplate = require('../templates/tvs.hbs'),
-    context = {
-      tvs: tvs
-    },
-    tvOptions = tvsTemplate(context);
-
-  questionEl.innerHTML = tvOptions;
-
-  addTVEvent();
-
-  function addTVEvent() {
-    const tv = document.querySelectorAll('[name="tv"]'),
-      tvLength = tv.length;
-
-    for (let i = 0; i < tvLength; i++) {
-      tv[i].addEventListener('click', function() {
-        createResultsContainer();
-        displayBars();
-        createResultsMessage();
-        insertRetryButton();
-      });
-    }
-  }
-}
-
-export { insertDrinkQuestion };
+export { matchedBars, initFinder, insertQuestion };

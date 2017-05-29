@@ -1,23 +1,9 @@
 <p class="question__text">What are you looking to drink?</p>
-<div class="question__choices">
-    <div class="question__choices--columns">
-    <p>
-        <input class="drink-radio" name="speciality" type="radio" id="radio-{{drinks.[0]}}" value="{{drinks.[0]}}" />
-        <label class="drink-label" for="radio-{{drinks.[0]}}">{{drinks.[0]}}</label>
-    </p>
-    <p>
-        <input class="drink-radio" name="speciality" type="radio" id="radio-{{drinks.[1]}}" value="{{drinks.[1]}}" />
-        <label class="drink-label" for="radio-{{drinks.[1]}}">{{drinks.[1]}}</label>
-    </p>
+<div class="drink-choices">
+    {{#each options}}
+    <div>
+        <input class="drinks" type="radio" id="radio-{{this}}" value="{{this}}" />
+        <label class="drink-label" for="radio-{{this}}">{{this}}</label>
     </div>
-    <div class="question__choices--columns">
-    <p>
-        <input class="drink-radio" name="speciality" type="radio" id="radio-{{drinks.[2]}}" value="{{drinks.[2]}}" />
-        <label class="drink-label" for="radio-{{drinks.[2]}}">{{drinks.[2]}}</label>
-    </p>
-    <p>
-        <input class="drink-radio" name="speciality" type="radio" id="radio-{{drinks.[3]}}" value="{{drinks.[3]}}"/>
-        <label class="drink-label" for="radio-{{drinks.[3]}}">{{drinks.[3]}}</label>
-    </p>
-    </div>
+    {{/each}}
 </div>

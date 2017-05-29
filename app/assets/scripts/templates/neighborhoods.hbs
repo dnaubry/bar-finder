@@ -1,9 +1,9 @@
 <p class="question__text">Where in the city do you want to grab a drink?</p>
-<div class="neighborhoods">
+<div class="neighborhood-choices">
     <label for="neighborhoods">Neighborhoods:</label>
-    <select id="neighborhoods">
+    <select class="neighborhoods" id="neighborhoods">
     <option value="" disabled selected>Pick one!</option>
-    {{#each neighborhoods}}
+    {{#each options}}
         <option value="{{this}}">{{this}}</option>
     {{/each}}
     </select>
