@@ -1,11 +1,11 @@
 import { matchedBars, initFinder, insertQuestion } from './questions';
+import { createElement } from './elements';
 
 // Add all bars button event listener
 const allBarsBtn = document.getElementById('allBarsBtn');
 allBarsBtn.addEventListener('click', function() {
-  if (!document.querySelector('.results')) {
-    displayResults();
-  }
+  initFinder();
+  displayResults();
 });
 
 // Displays the details of the matched bars using a Handlebars template
@@ -20,6 +20,7 @@ function displayBars() {
       address: bar.address.slice(0, (bar.address.indexOf(','))),
       neighborhood: bar.neighborhood,
       speciality: bar.drink,
+      other: bar.otherDrinks,
       price: bar.price,
       tv: bar.tv
     };
@@ -172,7 +173,7 @@ function initMap() {
       map: map,
       content: `
       <div class="infowindow-content">
-        <p><span>${matchedBars[i].name}</span></p>
+        <p><span><a href="${matchedBars[i].website}" target="_blank">${matchedBars[i].name}</a></span></p>
         <p><span>Address:</span> ${matchedBars[i].address}</p>
         <p><a href="https://www.google.com/maps/dir/Current+Location/${matchedBars[i].address}" target="_blank">Directions</a> (opens in Google Maps)
       </div>`
@@ -189,41 +190,21 @@ function initMap() {
 
 // Add a restart button after the results, which will restart the finder when clicked
 function insertRestartButton() {
-  const mainContent = document.querySelector('.main-content'),
-    restart = document.createElement('div'),
-    results = document.querySelector('.results'),
-    map = document.querySelector('.map');
+  // Create an element for the retart button inside .main-content
+  createElement('main-content', 'restart');
 
-  restart.classList.add('restart');
+  // Add the button to the restart element
+  const restart = document.querySelector('.restart');
   restart.innerHTML = `<button id="restartBtn" class="button button--large">Restart</button>`;
-  mainContent.appendChild(restart);
 
   // Add event listener to restart button
   const restartBtn = document.getElementById('restartBtn');
   restartBtn.addEventListener('click', function() {
-    // Remove results
-    if (results) {
-      mainContent.removeChild(results);
-    }
-    if (map) {
-      mainContent.removeChild(map);
-    }
-    // Remove restart button
-    mainContent.removeChild(restart);
     // Reinitiate the bar finder
     initFinder();
     // Set counter to 0
     insertQuestion.count = 0;
   });
-}
-
-// Inserts a div element with the specified className
-function createElement(parent, className) {
-  const parentEl = document.querySelector(`.${parent}`),
-    newEl = document.createElement('div');
-
-  parentEl.appendChild(newEl);
-  newEl.classList.add(`${className}`);
 }
 
 // Displays the matched bar results

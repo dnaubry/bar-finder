@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -264,7 +264,7 @@ module.exports = exports['default'];
 
 // Create a simple path alias to allow browserify to resolve
 // the runtime on a supported path.
-module.exports = __webpack_require__(14)['default'];
+module.exports = __webpack_require__(15)['default'];
 
 
 /***/ }),
@@ -279,11 +279,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.insertQuestion = exports.initFinder = exports.matchedBars = undefined;
 
-var _bars = __webpack_require__(29);
+var _bars = __webpack_require__(30);
 
 var _bars2 = _interopRequireDefault(_bars);
 
-var _results = __webpack_require__(8);
+var _elements = __webpack_require__(4);
+
+var _results = __webpack_require__(9);
 
 var _results2 = _interopRequireDefault(_results);
 
@@ -298,39 +300,47 @@ var matchedBars = [];
 var allBars = [].concat(_toConsumableArray(_bars2.default.bars)),
     numOfBars = allBars.length;
 
-// Loop through all bars and push drink and neighborhood options into an array
-var drinks = [],
-    neighborhoods = [];
+// Loop through all bars and push neighborhood options into an array
+var neighborhoods = [];
 for (var i = 0; i < numOfBars; i++) {
-  drinks.push(allBars[i].drink);
   neighborhoods.push(allBars[i].neighborhood);
 }
 // Remove duplicates and sort alphabetically
-drinks = Array.from(new Set(drinks)).sort();
 neighborhoods = Array.from(new Set(neighborhoods)).sort();
 
 // Array of objects containing the topics for the questions
 var topics = [{
   name: 'drinks',
-  options: drinks,
-  template: __webpack_require__(9)
+  options: ['beer', 'cider', 'cocktails', 'wine'],
+  template: __webpack_require__(10)
 }, {
   name: 'neighborhoods',
   options: neighborhoods,
-  template: __webpack_require__(10)
+  template: __webpack_require__(11)
 }, {
   name: 'prices',
   options: ['low', 'mid', 'high'],
-  template: __webpack_require__(11)
+  template: __webpack_require__(12)
 }, {
   name: 'tvs',
-  options: ['no', 'yes'],
-  template: __webpack_require__(13)
+  options: ['no', 'yes', 'maybe'],
+  template: __webpack_require__(14)
 }];
 
 function initFinder() {
   // Set matchedBars to full list of bars
   exports.matchedBars = matchedBars = [].concat(_toConsumableArray(_bars2.default.bars));
+
+  // If they exist, remove results, map, and restart elements
+  if (document.querySelector('.results')) {
+    (0, _elements.removeElement)('main-content', 'results');
+  }
+  if (document.querySelector('.map')) {
+    (0, _elements.removeElement)('main-content', 'map');
+  }
+  if (document.querySelector('.restart')) {
+    (0, _elements.removeElement)('main-content', 'restart');
+  }
 
   // Insert text and start button
   var question = document.querySelector('.question');
@@ -345,17 +355,21 @@ function initFinder() {
 }
 
 // Filters bars by matching the criteria chosen
-function filterBars(criteria) {
+function filterBars(criteria, topic) {
   exports.matchedBars = matchedBars = [].concat(_toConsumableArray(matchedBars.filter(function (bar) {
     var regex = new RegExp(criteria, 'gi');
-    return bar.drink.match(regex) || bar.neighborhood.match(regex) || bar.priceRange.match(regex) || bar.tv.match(regex);
+    if (topic === 'drink') {
+      return bar[topic].match(regex) || bar.otherDrinks.match(regex);
+    } else {
+      return bar[topic].match(regex);
+    }
   })));
   return matchedBars;
 }
 
 // Set matchedBars array equal to the filtered bars so it can be filtered further by the next question
 function findBars() {
-  exports.matchedBars = matchedBars = filterBars(this.value);
+  exports.matchedBars = matchedBars = filterBars(this.value, this.name);
 }
 
 // Inserts question and options using Handlebars template and the topics array
@@ -397,6 +411,7 @@ function insertQuestion(topic) {
   events(name);
 }
 
+// Set initial count to 0
 insertQuestion.count = 0;
 
 exports.matchedBars = matchedBars;
@@ -405,6 +420,36 @@ exports.insertQuestion = insertQuestion;
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+// Creates and adds a child div element with the specified className
+function createElement(parent, className) {
+  var parentEl = document.querySelector('.' + parent),
+      childEl = document.createElement('div');
+
+  parentEl.appendChild(childEl);
+  childEl.classList.add('' + className);
+}
+
+// Removes a child element from a parent
+function removeElement(parent, className) {
+  var parentEl = document.querySelector('.' + parent),
+      childEl = document.querySelector('.' + className);
+
+  parentEl.removeChild(childEl);
+}
+
+exports.createElement = createElement;
+exports.removeElement = removeElement;
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -422,11 +467,11 @@ var _exception = __webpack_require__(1);
 
 var _exception2 = _interopRequireDefault(_exception);
 
-var _helpers = __webpack_require__(17);
+var _helpers = __webpack_require__(18);
 
-var _decorators = __webpack_require__(15);
+var _decorators = __webpack_require__(16);
 
-var _logger = __webpack_require__(25);
+var _logger = __webpack_require__(26);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -515,7 +560,7 @@ exports.logger = _logger2['default'];
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -546,7 +591,7 @@ function about() {
 exports.default = about;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -558,19 +603,19 @@ module.exports = {
 };
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _keys = __webpack_require__(6);
+var _keys = __webpack_require__(7);
 
 var _keys2 = _interopRequireDefault(_keys);
 
 var _questions = __webpack_require__(3);
 
-var _about = __webpack_require__(5);
+var _about = __webpack_require__(6);
 
 var _about2 = _interopRequireDefault(_about);
 
@@ -591,7 +636,7 @@ window.onload = function () {
 };
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -603,18 +648,19 @@ Object.defineProperty(exports, "__esModule", {
 
 var _questions = __webpack_require__(3);
 
+var _elements = __webpack_require__(4);
+
 // Add all bars button event listener
 var allBarsBtn = document.getElementById('allBarsBtn');
 allBarsBtn.addEventListener('click', function () {
-  if (!document.querySelector('.results')) {
-    displayResults();
-  }
+  (0, _questions.initFinder)();
+  displayResults();
 });
 
 // Displays the details of the matched bars using a Handlebars template
 function displayBars() {
   var results = document.querySelector('.results'),
-      resultsTemplate = __webpack_require__(12);
+      resultsTemplate = __webpack_require__(13);
   var context = void 0,
       displayResult = void 0;
   var html = _questions.matchedBars.map(function (bar) {
@@ -624,6 +670,7 @@ function displayBars() {
       address: bar.address.slice(0, bar.address.indexOf(',')),
       neighborhood: bar.neighborhood,
       speciality: bar.drink,
+      other: bar.otherDrinks,
       price: bar.price,
       tv: bar.tv
     };
@@ -737,7 +784,7 @@ function initMap() {
     marker = new google.maps.Marker({
       position: locations[i],
       map: map,
-      content: '\n      <div class="infowindow-content">\n        <p><span>' + _questions.matchedBars[i].name + '</span></p>\n        <p><span>Address:</span> ' + _questions.matchedBars[i].address + '</p>\n        <p><a href="https://www.google.com/maps/dir/Current+Location/' + _questions.matchedBars[i].address + '" target="_blank">Directions</a> (opens in Google Maps)\n      </div>'
+      content: '\n      <div class="infowindow-content">\n        <p><span><a href="' + _questions.matchedBars[i].website + '" target="_blank">' + _questions.matchedBars[i].name + '</a></span></p>\n        <p><span>Address:</span> ' + _questions.matchedBars[i].address + '</p>\n        <p><a href="https://www.google.com/maps/dir/Current+Location/' + _questions.matchedBars[i].address + '" target="_blank">Directions</a> (opens in Google Maps)\n      </div>'
     });
 
     google.maps.event.addListener(marker, 'click', function (marker, i) {
@@ -751,41 +798,21 @@ function initMap() {
 
 // Add a restart button after the results, which will restart the finder when clicked
 function insertRestartButton() {
-  var mainContent = document.querySelector('.main-content'),
-      restart = document.createElement('div'),
-      results = document.querySelector('.results'),
-      map = document.querySelector('.map');
+  // Create an element for the retart button inside .main-content
+  (0, _elements.createElement)('main-content', 'restart');
 
-  restart.classList.add('restart');
+  // Add the button to the restart element
+  var restart = document.querySelector('.restart');
   restart.innerHTML = '<button id="restartBtn" class="button button--large">Restart</button>';
-  mainContent.appendChild(restart);
 
   // Add event listener to restart button
   var restartBtn = document.getElementById('restartBtn');
   restartBtn.addEventListener('click', function () {
-    // Remove results
-    if (results) {
-      mainContent.removeChild(results);
-    }
-    if (map) {
-      mainContent.removeChild(map);
-    }
-    // Remove restart button
-    mainContent.removeChild(restart);
     // Reinitiate the bar finder
     (0, _questions.initFinder)();
     // Set counter to 0
     _questions.insertQuestion.count = 0;
   });
-}
-
-// Inserts a div element with the specified className
-function createElement(parent, className) {
-  var parentEl = document.querySelector('.' + parent),
-      newEl = document.createElement('div');
-
-  parentEl.appendChild(newEl);
-  newEl.classList.add('' + className);
 }
 
 // Displays the matched bar results
@@ -794,9 +821,9 @@ function displayResults() {
   // If there are matched bars
   if (_questions.matchedBars.length > 0) {
     // Create a div element to insert the matched bars into
-    createElement('main-content', 'results');
+    (0, _elements.createElement)('main-content', 'results');
     // Create a div element to insert the map into
-    createElement('main-content', 'map');
+    (0, _elements.createElement)('main-content', 'map');
     question.innerHTML = '<p class="question__text">Here are your bar options. Go drink!</p>';
     displayBars();
     initMap();
@@ -809,7 +836,7 @@ function displayResults() {
 exports.default = displayResults;
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -817,7 +844,7 @@ function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj);
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "    <div>\r\n        <input class=\"drinks\" type=\"radio\" id=\"radio-"
+  return "    <div>\r\n        <input class=\"drinks\" name=\"drink\" type=\"radio\" id=\"radio-"
     + alias2(alias1(depth0, depth0))
     + "\" value=\""
     + alias2(alias1(depth0, depth0))
@@ -835,29 +862,33 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
-module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data,blockParams) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "        <option value=\""
-    + alias2(alias1(depth0, depth0))
+  return "    <div>\r\n        <input class=\"neighborhoods\" name=\"neighborhood\" type=\"checkbox\" id=\"checkbox-"
+    + alias2(alias1(blockParams[0][1], depth0))
+    + "\" value=\""
+    + alias2(alias1(blockParams[0][0], depth0))
+    + "\" />\r\n        <label class=\"neighborhood-label\" for=\"checkbox-"
+    + alias2(alias1(blockParams[0][1], depth0))
     + "\">"
-    + alias2(alias1(depth0, depth0))
-    + "</option>\r\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    + alias2(alias1(blockParams[0][0], depth0))
+    + "</label>\r\n    </div>\r\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams) {
     var stack1;
 
-  return "<p class=\"question__text\">Where in the city do you want to grab a drink?</p>\r\n<div class=\"neighborhood-choices\">\r\n    <label for=\"neighborhoods\">Neighborhoods:</label>\r\n    <select class=\"neighborhoods\" id=\"neighborhoods\">\r\n    <option value=\"\" disabled selected>Pick one!</option>\r\n"
-    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.options : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "    </select>\r\n</div>";
-},"useData":true});
+  return "<p class=\"question__text\">Where in the city do you want to grab a drink?</p>\r\n<div class=\"neighborhood-choices\">\r\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.options : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 2, blockParams),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "</div>\r\n";
+},"useData":true,"useBlockParams":true});
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -865,17 +896,17 @@ function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj);
 module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "<p class=\"question__text\">What's the max you'd spend per drink?</p>\r\n    <div class=\"price-choices\">\r\n      <div>\r\n        <input class=\"prices\" type=\"radio\" id=\"radio-low-price\" value=\""
+  return "<p class=\"question__text\">What's the max you'd spend per drink?</p>\r\n    <div class=\"price-choices\">\r\n      <div>\r\n        <input class=\"prices\" name=\"priceRange\" type=\"radio\" id=\"radio-low-price\" value=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.options : depth0)) != null ? stack1["0"] : stack1), depth0))
-    + "\" />\r\n        <label class=\"price-label\" for=\"radio-low-price\">$</label>\r\n      </div>\r\n      <div>\r\n        <input class=\"prices\" type=\"radio\" id=\"radio-mid-price\" value=\""
+    + "\" />\r\n        <label class=\"price-label\" for=\"radio-low-price\">$</label>\r\n      </div>\r\n      <div>\r\n        <input class=\"prices\" name=\"priceRange\" type=\"radio\" id=\"radio-mid-price\" value=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.options : depth0)) != null ? stack1["1"] : stack1), depth0))
-    + "\" />\r\n        <label class=\"price-label\" for=\"radio-mid-price\">$$</label>\r\n      </div>\r\n      <div>\r\n        <input class=\"prices\" type=\"radio\" id=\"radio-high-price\" value=\""
+    + "\" />\r\n        <label class=\"price-label\" for=\"radio-mid-price\">$$</label>\r\n      </div>\r\n      <div>\r\n        <input class=\"prices\" name=\"priceRange\" type=\"radio\" id=\"radio-high-price\" value=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.options : depth0)) != null ? stack1["2"] : stack1), depth0))
     + "\" />\r\n        <label class=\"price-label\" for=\"radio-high-price\">$$$</label>\r\n      </div>\r\n      </div>\r\n    </div>";
 },"useData":true});
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -885,12 +916,14 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 
   return "<div class=\"result\">\r\n    <div class=\"result__name\">"
     + alias4(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper)))
-    + "</div>\r\n    <div class=\"result__column result__column--left\">\r\n        <ul>\r\n        <li><span>Address</span></li>\r\n        <li><span>Neighborhood</span></li>\r\n        <li><span>Known for</span></li>\r\n        <li><span>Average Drink Price</span></li>\r\n        <li><span>TVs</span></li>\r\n        </ul>\r\n    </div>\r\n    <div class=\"result__column result__column--right\">\r\n        <ul>\r\n        <li>"
+    + "</div>\r\n    <div class=\"result__column result__column--left\">\r\n        <ul>\r\n        <li><span>Address</span></li>\r\n        <li><span>Neighborhood</span></li>\r\n        <li><span>Known for</span></li>\r\n        <li><span>Also has</span></li>\r\n        <li><span>Average Drink Price</span></li>\r\n        <li><span>TVs</span></li>\r\n        </ul>\r\n    </div>\r\n    <div class=\"result__column result__column--right\">\r\n        <ul>\r\n        <li>"
     + alias4(((helper = (helper = helpers.address || (depth0 != null ? depth0.address : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"address","hash":{},"data":data}) : helper)))
     + "</li>\r\n        <li>"
     + alias4(((helper = (helper = helpers.neighborhood || (depth0 != null ? depth0.neighborhood : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"neighborhood","hash":{},"data":data}) : helper)))
     + "</li>\r\n        <li>"
     + alias4(((helper = (helper = helpers.speciality || (depth0 != null ? depth0.speciality : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"speciality","hash":{},"data":data}) : helper)))
+    + "</li>\r\n        <li>"
+    + alias4(((helper = (helper = helpers.other || (depth0 != null ? depth0.other : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"other","hash":{},"data":data}) : helper)))
     + "</li>\r\n        <li>"
     + alias4(((helper = (helper = helpers.price || (depth0 != null ? depth0.price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"price","hash":{},"data":data}) : helper)))
     + "</li>\r\n        <li>"
@@ -903,7 +936,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 },"useData":true});
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -911,7 +944,7 @@ function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj);
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "    <div>\r\n        <input class=\"tvs\" type=\"radio\" id=\"radio-tv-"
+  return "    <div>\r\n        <input class=\"tvs\" name=\"tvOptions\" type=\"radio\" id=\"radio-tv-"
     + alias2(alias1(depth0, depth0))
     + "\" value=\""
     + alias2(alias1(depth0, depth0))
@@ -929,7 +962,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -944,14 +977,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-var _handlebarsBase = __webpack_require__(4);
+var _handlebarsBase = __webpack_require__(5);
 
 var base = _interopRequireWildcard(_handlebarsBase);
 
 // Each of these augment the Handlebars object. No need to setup here.
 // (This is done to easily share code between commonjs and browse envs)
 
-var _handlebarsSafeString = __webpack_require__(28);
+var _handlebarsSafeString = __webpack_require__(29);
 
 var _handlebarsSafeString2 = _interopRequireDefault(_handlebarsSafeString);
 
@@ -963,11 +996,11 @@ var _handlebarsUtils = __webpack_require__(0);
 
 var Utils = _interopRequireWildcard(_handlebarsUtils);
 
-var _handlebarsRuntime = __webpack_require__(27);
+var _handlebarsRuntime = __webpack_require__(28);
 
 var runtime = _interopRequireWildcard(_handlebarsRuntime);
 
-var _handlebarsNoConflict = __webpack_require__(26);
+var _handlebarsNoConflict = __webpack_require__(27);
 
 var _handlebarsNoConflict2 = _interopRequireDefault(_handlebarsNoConflict);
 
@@ -1002,7 +1035,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1014,7 +1047,7 @@ exports.registerDefaultDecorators = registerDefaultDecorators;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _decoratorsInline = __webpack_require__(16);
+var _decoratorsInline = __webpack_require__(17);
 
 var _decoratorsInline2 = _interopRequireDefault(_decoratorsInline);
 
@@ -1025,7 +1058,7 @@ function registerDefaultDecorators(instance) {
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1061,7 +1094,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1073,31 +1106,31 @@ exports.registerDefaultHelpers = registerDefaultHelpers;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _helpersBlockHelperMissing = __webpack_require__(18);
+var _helpersBlockHelperMissing = __webpack_require__(19);
 
 var _helpersBlockHelperMissing2 = _interopRequireDefault(_helpersBlockHelperMissing);
 
-var _helpersEach = __webpack_require__(19);
+var _helpersEach = __webpack_require__(20);
 
 var _helpersEach2 = _interopRequireDefault(_helpersEach);
 
-var _helpersHelperMissing = __webpack_require__(20);
+var _helpersHelperMissing = __webpack_require__(21);
 
 var _helpersHelperMissing2 = _interopRequireDefault(_helpersHelperMissing);
 
-var _helpersIf = __webpack_require__(21);
+var _helpersIf = __webpack_require__(22);
 
 var _helpersIf2 = _interopRequireDefault(_helpersIf);
 
-var _helpersLog = __webpack_require__(22);
+var _helpersLog = __webpack_require__(23);
 
 var _helpersLog2 = _interopRequireDefault(_helpersLog);
 
-var _helpersLookup = __webpack_require__(23);
+var _helpersLookup = __webpack_require__(24);
 
 var _helpersLookup2 = _interopRequireDefault(_helpersLookup);
 
-var _helpersWith = __webpack_require__(24);
+var _helpersWith = __webpack_require__(25);
 
 var _helpersWith2 = _interopRequireDefault(_helpersWith);
 
@@ -1114,7 +1147,7 @@ function registerDefaultHelpers(instance) {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1160,7 +1193,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1261,7 +1294,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1293,7 +1326,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1329,7 +1362,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1362,7 +1395,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1381,7 +1414,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1421,7 +1454,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1475,7 +1508,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1500,10 +1533,10 @@ exports['default'] = function (Handlebars) {
 module.exports = exports['default'];
 //# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL2xpYi9oYW5kbGViYXJzL25vLWNvbmZsaWN0LmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7O3FCQUNlLFVBQVMsVUFBVSxFQUFFOztBQUVsQyxNQUFJLElBQUksR0FBRyxPQUFPLE1BQU0sS0FBSyxXQUFXLEdBQUcsTUFBTSxHQUFHLE1BQU07TUFDdEQsV0FBVyxHQUFHLElBQUksQ0FBQyxVQUFVLENBQUM7O0FBRWxDLFlBQVUsQ0FBQyxVQUFVLEdBQUcsWUFBVztBQUNqQyxRQUFJLElBQUksQ0FBQyxVQUFVLEtBQUssVUFBVSxFQUFFO0FBQ2xDLFVBQUksQ0FBQyxVQUFVLEdBQUcsV0FBVyxDQUFDO0tBQy9CO0FBQ0QsV0FBTyxVQUFVLENBQUM7R0FDbkIsQ0FBQztDQUNIIiwiZmlsZSI6Im5vLWNvbmZsaWN0LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyogZ2xvYmFsIHdpbmRvdyAqL1xuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24oSGFuZGxlYmFycykge1xuICAvKiBpc3RhbmJ1bCBpZ25vcmUgbmV4dCAqL1xuICBsZXQgcm9vdCA9IHR5cGVvZiBnbG9iYWwgIT09ICd1bmRlZmluZWQnID8gZ2xvYmFsIDogd2luZG93LFxuICAgICAgJEhhbmRsZWJhcnMgPSByb290LkhhbmRsZWJhcnM7XG4gIC8qIGlzdGFuYnVsIGlnbm9yZSBuZXh0ICovXG4gIEhhbmRsZWJhcnMubm9Db25mbGljdCA9IGZ1bmN0aW9uKCkge1xuICAgIGlmIChyb290LkhhbmRsZWJhcnMgPT09IEhhbmRsZWJhcnMpIHtcbiAgICAgIHJvb3QuSGFuZGxlYmFycyA9ICRIYW5kbGViYXJzO1xuICAgIH1cbiAgICByZXR1cm4gSGFuZGxlYmFycztcbiAgfTtcbn1cbiJdfQ==
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(30)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31)))
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1532,7 +1565,7 @@ var _exception = __webpack_require__(1);
 
 var _exception2 = _interopRequireDefault(_exception);
 
-var _base = __webpack_require__(4);
+var _base = __webpack_require__(5);
 
 function checkRevision(compilerInfo) {
   var compilerRevision = compilerInfo && compilerInfo[0] || 1,
@@ -1817,7 +1850,7 @@ function executeDecorators(fn, prog, container, depths, data, blockParams) {
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1839,7 +1872,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -1851,7 +1884,9 @@ module.exports = {
 			"longitude": -87.674522,
 			"neighborhood": "North Center",
 			"drink": "beer",
+			"otherDrinks": "more beer",
 			"tv": "no",
+			"tvOptions": "no-maybe",
 			"price": "$",
 			"priceRange": "low-mid-high",
 			"website": "http://www.begylebrewing.com/"
@@ -1863,7 +1898,9 @@ module.exports = {
 			"longitude": -87.674547,
 			"neighborhood": "North Center",
 			"drink": "beer",
+			"otherDrinks": "more beer",
 			"tv": "no",
+			"tvOptions": "no-maybe",
 			"price": "$",
 			"priceRange": "low-mid-high",
 			"website": "http://dovetailbrewery.com/"
@@ -1875,7 +1912,9 @@ module.exports = {
 			"longitude": -87.681947,
 			"neighborhood": "North Center",
 			"drink": "beer",
+			"otherDrinks": "more beer",
 			"tv": "no",
+			"tvOptions": "no-maybe",
 			"price": "$",
 			"priceRange": "low-mid-high",
 			"website": "http://www.halfacrebeer.com/"
@@ -1887,10 +1926,26 @@ module.exports = {
 			"longitude": -87.668603,
 			"neighborhood": "Andersonville",
 			"drink": "beer",
+			"otherDrinks": "cider, cocktails, wine",
 			"tv": "no",
+			"tvOptions": "no-maybe",
 			"price": "$$",
 			"priceRange": "mid-high",
 			"website": "http://www.hopleafbar.com/"
+		},
+		{
+			"name": "Scofflaw",
+			"address": "3201 W Armitage Ave, Chicago, IL 60647",
+			"latitude": 41.917191,
+			"longitude": -87.707251,
+			"neighborhood": "Logan Square",
+			"drink": "cocktails",
+			"otherDrinks": "beer, wine",
+			"tv": "no",
+			"tvOptions": "no-maybe",
+			"price": "$$",
+			"priceRange": "mid-high",
+			"website": "http://scofflawchicago.com/"
 		},
 		{
 			"name": "The Barrelhouse Flat",
@@ -1899,7 +1954,9 @@ module.exports = {
 			"longitude": -87.654754,
 			"neighborhood": "Lincoln Park",
 			"drink": "cocktails",
+			"otherDrinks": "beer, wine",
 			"tv": "no",
+			"tvOptions": "no-maybe",
 			"price": "$$$",
 			"priceRange": "high",
 			"website": "http://www.barrelhouseflat.com/"
@@ -1911,7 +1968,9 @@ module.exports = {
 			"longitude": -87.685766,
 			"neighborhood": "Lincoln Square",
 			"drink": "beer",
+			"otherDrinks": "cocktails, wine",
 			"tv": "yes",
+			"tvOptions": "yes-maybe",
 			"price": "$$",
 			"priceRange": "mid-high",
 			"website": "http://www.thegrafton.com/"
@@ -1923,7 +1982,9 @@ module.exports = {
 			"longitude": -87.683024,
 			"neighborhood": "Lincoln Square",
 			"drink": "cider",
+			"otherDrinks": "beer",
 			"tv": "no",
+			"tvOptions": "no-maybe",
 			"price": "$$",
 			"priceRange": "mid-high",
 			"website": "http://www.thenorthman.com/"
@@ -1935,8 +1996,9 @@ module.exports = {
 			"longitude": -87.63373,
 			"neighborhood": "River North",
 			"drink": "beer",
-			"otherDrinks": "wine, cocktails",
+			"otherDrinks": "cocktails, wine",
 			"tv": "yes",
+			"tvOptions": "yes-maybe",
 			"price": "$$",
 			"priceRange": "mid-high",
 			"website": "http://thepeppercanister.com/"
@@ -1945,7 +2007,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports) {
 
 var g;

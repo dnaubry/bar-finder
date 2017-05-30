@@ -2,7 +2,7 @@
 <div class="drink-choices">
     {{#each options}}
     <div>
-        <input class="drinks" type="radio" id="radio-{{this}}" value="{{this}}" />
+        <input class="drinks" name="drink" type="radio" id="radio-{{this}}" value="{{this}}" />
         <label class="drink-label" for="radio-{{this}}">{{this}}</label>
     </div>
     {{/each}}

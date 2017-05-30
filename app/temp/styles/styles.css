@@ -107,24 +107,23 @@ html, body {
     @media (min-width: 800px) {
       .question__text {
         padding: 2rem; } }
-  .question .drink-choices, .question .price-choices, .question .tv-choices {
+  .question .drink-choices, .question .price-choices, .question .tv-choices, .question .neighborhood-choices {
     display: inline-block; }
-    .question .drink-choices div, .question .price-choices div, .question .tv-choices div {
+    .question .drink-choices div, .question .price-choices div, .question .tv-choices div, .question .neighborhood-choices div {
       background-color: #3E4838;
       border: 1px solid #E0E6EB;
+      padding: 1rem;
       transition: all 0.5s ease; }
-      .question .drink-choices div:hover, .question .price-choices div:hover, .question .tv-choices div:hover {
+      .question .drink-choices div:hover, .question .price-choices div:hover, .question .tv-choices div:hover, .question .neighborhood-choices div:hover {
         background-color: #2A2A30; }
-      .question .drink-choices div label:hover, .question .price-choices div label:hover, .question .tv-choices div label:hover {
+      .question .drink-choices div label:hover, .question .price-choices div label:hover, .question .tv-choices div label:hover, .question .neighborhood-choices div label:hover {
         cursor: pointer; }
   .question .drink-choices {
-    height: 300px;
     width: 400px; }
     .question .drink-choices div {
       border-radius: 5px;
       display: inline-block;
       margin: .5rem;
-      padding: 1.5rem 0;
       width: 170px; }
       @media (min-width: 800px) {
         .question .drink-choices div {
@@ -134,7 +133,6 @@ html, body {
       text-transform: capitalize; }
   .question .price-choices div {
     float: left;
-    padding: 1rem;
     transition: all 0.5s ease; }
     .question .price-choices div:first-of-type {
       border-radius: 5px 0 0 5px; }
@@ -145,22 +143,26 @@ html, body {
       padding: 1rem 1.3rem; }
   .question .tv-choices div {
     border-radius: 5px;
-    padding: 1rem;
     margin: 1rem .5rem; }
     .question .tv-choices div .tv-label {
       padding: 1rem 5rem;
       text-transform: capitalize; }
-  .question input[type="radio"] {
+  .question .neighborhood-choices div {
+    border-radius: 5px;
+    display: inline-block;
+    font-family: "Fjord One", serif;
+    margin: .5rem;
+    width: 220px; }
+    @media (min-width: 800px) {
+      .question .neighborhood-choices div {
+        width: 180px; } }
+    .question .neighborhood-choices div .neighborhood-label {
+      padding: 1rem; }
+  .question .neighborhood-choices:hover {
+    cursor: pointer; }
+  .question input[type="radio"], .question input[type="checkbox"] {
     position: absolute;
     left: -9999px; }
-  .question .neighborhoods {
-    border-radius: 5px;
-    font-family: "Fjord One", serif;
-    font-size: 1.1rem;
-    padding: .2rem;
-    margin-left: 1rem; }
-    .question .neighborhoods:hover {
-      cursor: pointer; }
 
 .results {
   border-top: 1px dashed #E1CD94;
@@ -222,6 +224,9 @@ html, body {
 
 .infowindow-content span {
   font-weight: 700; }
+
+.infowindow-content a {
+  color: #2A2A30; }
 
 .about {
   background-color: #2A2A30;

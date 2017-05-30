@@ -7,7 +7,9 @@
             "longitude": -87.674522,
             "neighborhood": "North Center",
             "drink": "beer",
+            "otherDrinks": "more beer",
             "tv": "no",
+            "tvOptions": "no-maybe",
             "price": "$",
             "priceRange": "low-mid-high",
             "website": "http://www.begylebrewing.com/"
@@ -19,7 +21,9 @@
             "longitude": -87.674547,
             "neighborhood": "North Center",
             "drink": "beer",
+            "otherDrinks": "more beer",
             "tv": "no",
+            "tvOptions": "no-maybe",
             "price": "$",
             "priceRange": "low-mid-high",
             "website": "http://dovetailbrewery.com/"
@@ -31,7 +35,9 @@
             "longitude": -87.681947,
             "neighborhood": "North Center",
             "drink": "beer",
+            "otherDrinks": "more beer",
             "tv": "no",
+            "tvOptions": "no-maybe",
             "price": "$",
             "priceRange": "low-mid-high",
             "website": "http://www.halfacrebeer.com/"
@@ -43,10 +49,26 @@
             "longitude": -87.668603,
             "neighborhood": "Andersonville",
             "drink": "beer",
+            "otherDrinks": "cider, cocktails, wine",
             "tv": "no",
+            "tvOptions": "no-maybe",
             "price": "$$",
             "priceRange": "mid-high",
             "website": "http://www.hopleafbar.com/"
+        },
+        {
+            "name": "Scofflaw",
+            "address": "3201 W Armitage Ave, Chicago, IL 60647",
+            "latitude": 41.917191,
+            "longitude": -87.707251,
+            "neighborhood": "Logan Square",
+            "drink": "cocktails",
+            "otherDrinks": "beer, wine",
+            "tv": "no",
+            "tvOptions": "no-maybe",
+            "price": "$$",
+            "priceRange": "mid-high",
+            "website": "http://scofflawchicago.com/"
         },
         {
             "name": "The Barrelhouse Flat",
@@ -55,7 +77,9 @@
             "longitude": -87.654754,
             "neighborhood": "Lincoln Park",
             "drink": "cocktails",
+            "otherDrinks": "beer, wine",
             "tv": "no",
+            "tvOptions": "no-maybe",
             "price": "$$$",
             "priceRange": "high",
             "website": "http://www.barrelhouseflat.com/"
@@ -67,7 +91,9 @@
             "longitude": -87.685766,
             "neighborhood": "Lincoln Square",
             "drink": "beer",
+            "otherDrinks": "cocktails, wine",
             "tv": "yes",
+            "tvOptions": "yes-maybe",
             "price": "$$",
             "priceRange": "mid-high",
             "website": "http://www.thegrafton.com/"
@@ -79,7 +105,9 @@
             "longitude": -87.683024,
             "neighborhood": "Lincoln Square",
             "drink": "cider",
+            "otherDrinks": "beer",
             "tv": "no",
+            "tvOptions": "no-maybe",
             "price": "$$",
             "priceRange": "mid-high",
             "website": "http://www.thenorthman.com/"
@@ -91,8 +119,9 @@
             "longitude": -87.633730,
             "neighborhood": "River North",
             "drink": "beer",
-            "otherDrinks": "wine, cocktails",
+            "otherDrinks": "cocktails, wine",
             "tv": "yes",
+            "tvOptions": "yes-maybe",
             "price": "$$",
             "priceRange": "mid-high",
             "website": "http://thepeppercanister.com/"  

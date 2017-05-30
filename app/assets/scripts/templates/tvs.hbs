@@ -2,7 +2,7 @@
 <div class="tv-choices">
     {{#each options}}
     <div>
-        <input class="tvs" type="radio" id="radio-tv-{{this}}" value="{{this}}" />
+        <input class="tvs" name="tvOptions" type="radio" id="radio-tv-{{this}}" value="{{this}}" />
         <label class="tv-label" for="radio-tv-{{this}}">{{this}}</label>
     </div>
     {{/each}}

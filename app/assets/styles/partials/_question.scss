@@ -18,12 +18,13 @@
         }
     }
 
-    .drink-choices, .price-choices, .tv-choices {
+    .drink-choices, .price-choices, .tv-choices, .neighborhood-choices {
         display: inline-block;
 
         div {
             background-color: $green;
             border: 1px solid $light-blue;
+            padding: 1rem;
             transition: all 0.5s ease;
 
             &:hover {
@@ -39,14 +40,12 @@
     }
 
     .drink-choices {
-        height: 300px;
         width: 400px;
 
         div {
             border-radius: 5px;
             display: inline-block;
             margin: .5rem;
-            padding: 1.5rem 0;
             width: 170px;
 
             @include atMedium {
@@ -63,7 +62,6 @@
     .price-choices {
         div {
             float: left;
-            padding: 1rem;
             transition: all 0.5s ease;
 
             &:first-of-type {
@@ -84,7 +82,6 @@
     .tv-choices {
         div {
             border-radius: 5px;
-            padding: 1rem;
             margin: 1rem .5rem;
 
             .tv-label {
@@ -94,20 +91,30 @@
         }
     }
 
-        input[type="radio"] {
-           position: absolute;
-           left: -9999px; 
-        }
+    .neighborhood-choices {
+        div {
+            border-radius: 5px;
+            display: inline-block;
+            font-family: $main-font-stack;
+            margin: .5rem;
+            width: 220px;
 
-    .neighborhoods {
-        border-radius: 5px;
-        font-family: $main-font-stack;
-        font-size: 1.1rem;
-        padding: .2rem;
-        margin-left: 1rem;
+            @include atMedium {
+                width: 180px;
+            }
+
+            .neighborhood-label {
+                padding: 1rem; 
+            }
+        }
 
         &:hover {
             cursor: pointer;
         }
     }
+
+    input[type="radio"], input[type="checkbox"] {
+           position: absolute;
+           left: -9999px; 
+        }
 }

@@ -1,4 +1,5 @@
 import barList from '../../data/bars.json';
+import { removeElement } from './elements';
 import displayResults from './results';
 
 // Array to hold matched bars as they are filtered
@@ -8,21 +9,19 @@ let matchedBars = [];
 const allBars = [...barList.bars],
   numOfBars = allBars.length;
 
-// Loop through all bars and push drink and neighborhood options into an array
-let drinks = [], neighborhoods = [];
+// Loop through all bars and push neighborhood options into an array
+let neighborhoods = [];
 for (let i = 0; i < numOfBars; i++) {
-  drinks.push(allBars[i].drink);
   neighborhoods.push(allBars[i].neighborhood);
 }
 // Remove duplicates and sort alphabetically
-drinks = (Array.from(new Set(drinks))).sort();
 neighborhoods = (Array.from(new Set(neighborhoods))).sort();
 
 // Array of objects containing the topics for the questions
 const topics = [
   {
     name: 'drinks',
-    options: drinks,
+    options: ['beer', 'cider', 'cocktails', 'wine'],
     template: require('../templates/drinks.hbs')
   },
   {
@@ -37,7 +36,7 @@ const topics = [
   },
   {
     name: 'tvs',
-    options: ['no', 'yes'],
+    options: ['no', 'yes', 'maybe'],
     template: require('../templates/tvs.hbs')
   }
 ];
@@ -45,6 +44,18 @@ const topics = [
 function initFinder() {
   // Set matchedBars to full list of bars
   matchedBars = [...barList.bars];
+
+  // If they exist, remove results, map, and restart elements
+  if (document.querySelector('.results')) {
+    removeElement('main-content', 'results');
+  }
+  if (document.querySelector('.map')) {
+    removeElement('main-content', 'map');
+  }
+  if (document.querySelector('.restart')) {
+    removeElement('main-content', 'restart');
+  }
+
 
   // Insert text and start button
   const question = document.querySelector('.question');
@@ -61,20 +72,22 @@ function initFinder() {
 }
 
 // Filters bars by matching the criteria chosen
-function filterBars(criteria) {
+function filterBars(criteria, topic) {
   matchedBars = [...matchedBars.filter(bar => {
     const regex = new RegExp(criteria, 'gi');
-    return bar.drink.match(regex) ||
-          bar.neighborhood.match(regex) ||
-          bar.priceRange.match(regex) ||
-          bar.tv.match(regex);
+    if (topic === 'drink') {
+      return bar[topic].match(regex) ||
+            bar.otherDrinks.match(regex);
+    } else {
+      return bar[topic].match(regex);
+    }
   })];
   return matchedBars;
 }
 
 // Set matchedBars array equal to the filtered bars so it can be filtered further by the next question
 function findBars() {
-  matchedBars = filterBars(this.value);
+  matchedBars = filterBars(this.value, this.name);
 }
 
 // Inserts question and options using Handlebars template and the topics array
@@ -116,6 +129,7 @@ function insertQuestion(topic) {
   events(name);
 }
 
+// Set initial count to 0
 insertQuestion.count = 0;
 
 export { matchedBars, initFinder, insertQuestion };
