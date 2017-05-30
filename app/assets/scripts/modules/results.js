@@ -1,5 +1,13 @@
 import { matchedBars, initFinder, insertQuestion } from './questions';
 
+// Add all bars button event listener
+const allBarsBtn = document.getElementById('allBarsBtn');
+allBarsBtn.addEventListener('click', function() {
+  if (!document.querySelector('.results')) {
+    displayResults();
+  }
+});
+
 // Displays the details of the matched bars using a Handlebars template
 function displayBars() {
   const results = document.querySelector('.results'),
@@ -181,24 +189,27 @@ function initMap() {
 
 // Add a restart button after the results, which will restart the finder when clicked
 function insertRestartButton() {
-  const wrapper = document.querySelector('.wrapper'),
-    mainContent = document.querySelector('.main-content'),
+  const mainContent = document.querySelector('.main-content'),
     restart = document.createElement('div'),
     results = document.querySelector('.results'),
     map = document.querySelector('.map');
 
   restart.classList.add('restart');
-  restart.innerHTML = `<button id="restartBtn">Restart</button>`;
-  wrapper.insertBefore(restart, null);
+  restart.innerHTML = `<button id="restartBtn" class="button button--large">Restart</button>`;
+  mainContent.appendChild(restart);
 
   // Add event listener to restart button
   const restartBtn = document.getElementById('restartBtn');
   restartBtn.addEventListener('click', function() {
     // Remove results
-    mainContent.removeChild(results);
-    mainContent.removeChild(map);
+    if (results) {
+      mainContent.removeChild(results);
+    }
+    if (map) {
+      mainContent.removeChild(map);
+    }
     // Remove restart button
-    wrapper.removeChild(restart);
+    mainContent.removeChild(restart);
     // Reinitiate the bar finder
     initFinder();
     // Set counter to 0
@@ -227,10 +238,10 @@ function displayResults() {
     question.innerHTML = '<p class="question__text">Here are your bar options. Go drink!</p>';
     displayBars();
     initMap();
-    insertRestartButton();
   } else {
     question.innerHTML = '<p class="question__text">You chose poorly. Try again.</p>';
   }
+  insertRestartButton();
 }
 
 export default displayResults;

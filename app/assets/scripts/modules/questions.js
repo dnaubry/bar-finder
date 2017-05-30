@@ -49,8 +49,8 @@ function initFinder() {
   // Insert text and start button
   const question = document.querySelector('.question');
   question.innerHTML = `
-    <p class="question__text">Select options to the questions to find a bar to visit.</p>
-    <button id="startBtn">Start</button>`;
+    <p class="question__text">Click start to answer a few questions about what kind of bar you'd like to visit!</p>
+    <button id="startBtn" class="button button--large">Start</button>`;
 
   // Add event listener to start button
   const startBtn = document.getElementById('startBtn');

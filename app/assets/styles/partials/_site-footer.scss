@@ -1,0 +1,10 @@
+.site-footer {
+    text-align: center;
+
+    @include atMedium {
+        position: relative;
+        right: 20px;
+        top: 18px;
+        text-align: right;
+    }
+}

@@ -1,19 +1,36 @@
-button {
-        background-color: $yellow;
-        border: 1px solid $light-blue;
-        border-radius: 5px;
-        color: $dark-gray;
+.button {
         font-family: $accent-font-stack;
-        font-size: 2rem;
-        text-transform: uppercase;
         letter-spacing: .1rem;
-        margin: 3rem auto;
-        padding: 1rem 1.5rem;
         transition: all 0.5s ease;
 
         &:hover {
             background-color: $dark-gray;
             color: $yellow;
             cursor: pointer;           
+        }
+
+        &:focus {
+            outline: 0;
+        }
+
+        &--large {
+            background-color: $yellow;
+            border: 1px solid $light-blue;
+            border-radius: 5px;
+            color: $dark-gray;
+            font-size: 2rem;
+            margin: 3rem auto;
+            padding: 1rem 1.5rem;        
+            text-transform: uppercase;
+        }
+
+        &--small {
+            background-color: $dark-gray;
+            border: none;
+            color: $light-blue;
+            font-size: 1rem;
+            margin: 0 .2rem;
+            padding: .5rem 1rem;
+            text-transform: lowercase;
         }
 }

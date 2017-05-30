@@ -6,22 +6,33 @@ html, body {
   margin: 0;
   padding: 0; }
 
-button {
-  background-color: #E1CD94;
-  border: 1px solid #E0E6EB;
-  border-radius: 5px;
-  color: #2A2A30;
+.button {
   font-family: "Chonburi", serif;
-  font-size: 2rem;
-  text-transform: uppercase;
   letter-spacing: .1rem;
-  margin: 3rem auto;
-  padding: 1rem 1.5rem;
   transition: all 0.5s ease; }
-  button:hover {
+  .button:hover {
     background-color: #2A2A30;
     color: #E1CD94;
     cursor: pointer; }
+  .button:focus {
+    outline: 0; }
+  .button--large {
+    background-color: #E1CD94;
+    border: 1px solid #E0E6EB;
+    border-radius: 5px;
+    color: #2A2A30;
+    font-size: 2rem;
+    margin: 3rem auto;
+    padding: 1rem 1.5rem;
+    text-transform: uppercase; }
+  .button--small {
+    background-color: #2A2A30;
+    border: none;
+    color: #E0E6EB;
+    font-size: 1rem;
+    margin: 0 .2rem;
+    padding: .5rem 1rem;
+    text-transform: lowercase; }
 
 .wrapper {
   margin: 1rem auto; }
@@ -52,6 +63,15 @@ button {
   letter-spacing: .2rem;
   text-align: center;
   background-color: #2A2A30; }
+
+.site-footer {
+  text-align: center; }
+  @media (min-width: 800px) {
+    .site-footer {
+      position: relative;
+      right: 20px;
+      top: 18px;
+      text-align: right; } }
 
 .main-content {
   width: 97%;
@@ -202,3 +222,52 @@ button {
 
 .infowindow-content span {
   font-weight: 700; }
+
+.about {
+  background-color: #2A2A30;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  -webkit-transform: scale(1.2);
+          transform: scale(1.2);
+  transition: all .3s ease-out;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 5; }
+  .about--is-visible {
+    opacity: 1;
+    visibility: visible;
+    -webkit-transform: scale(1);
+            transform: scale(1); }
+  .about__content {
+    border: 1px dashed #E1CD94;
+    color: #E0E6EB;
+    font-family: "Fjord One", serif;
+    padding: 1rem 3rem 2rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+    width: 300px; }
+    .about__content #close {
+      font-family: sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      position: absolute;
+      top: -15px;
+      right: 20px;
+      -webkit-transform: scaleX(1.3);
+              transform: scaleX(1.3); }
+      .about__content #close:hover {
+        cursor: pointer; }
+    .about__content h1 {
+      color: #E1CD94;
+      font-family: "Chonburi", serif;
+      text-align: center; }
+    .about__content a {
+      color: #E0E6EB; }
+      .about__content a:hover {
+        color: #E1CD94; }

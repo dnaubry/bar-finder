@@ -83,6 +83,19 @@
             "price": "$$",
             "priceRange": "mid-high",
             "website": "http://www.thenorthman.com/"
+        },
+        {
+            "name": "The Pepper Canister",
+            "address": "509 N Wells St, Chicago, IL 60654",
+            "latitude": 41.891150,
+            "longitude": -87.633730,
+            "neighborhood": "River North",
+            "drink": "beer",
+            "otherDrinks": "wine, cocktails",
+            "tv": "yes",
+            "price": "$$",
+            "priceRange": "mid-high",
+            "website": "http://thepeppercanister.com/"  
         }
     ]
 }

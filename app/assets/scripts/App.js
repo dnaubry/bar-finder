@@ -1,5 +1,6 @@
 import keys from '../data/keys.json';
 import { initFinder } from './modules/questions';
+import about from './modules/about';
 
 // Loads Google Maps script using API key stored in keys.json
 function loadMapScript() {
@@ -12,4 +13,7 @@ function loadMapScript() {
 window.onload = function() {
   loadMapScript();
   initFinder();
+  about();
 }
+
+

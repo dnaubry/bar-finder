@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -264,7 +264,7 @@ module.exports = exports['default'];
 
 // Create a simple path alias to allow browserify to resolve
 // the runtime on a supported path.
-module.exports = __webpack_require__(13)['default'];
+module.exports = __webpack_require__(14)['default'];
 
 
 /***/ }),
@@ -279,11 +279,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.insertQuestion = exports.initFinder = exports.matchedBars = undefined;
 
-var _bars = __webpack_require__(28);
+var _bars = __webpack_require__(29);
 
 var _bars2 = _interopRequireDefault(_bars);
 
-var _results = __webpack_require__(7);
+var _results = __webpack_require__(8);
 
 var _results2 = _interopRequireDefault(_results);
 
@@ -313,19 +313,19 @@ neighborhoods = Array.from(new Set(neighborhoods)).sort();
 var topics = [{
   name: 'drinks',
   options: drinks,
-  template: __webpack_require__(8)
+  template: __webpack_require__(9)
 }, {
   name: 'neighborhoods',
   options: neighborhoods,
-  template: __webpack_require__(9)
+  template: __webpack_require__(10)
 }, {
   name: 'prices',
   options: ['low', 'mid', 'high'],
-  template: __webpack_require__(10)
+  template: __webpack_require__(11)
 }, {
   name: 'tvs',
   options: ['no', 'yes'],
-  template: __webpack_require__(12)
+  template: __webpack_require__(13)
 }];
 
 function initFinder() {
@@ -334,7 +334,7 @@ function initFinder() {
 
   // Insert text and start button
   var question = document.querySelector('.question');
-  question.innerHTML = '\n    <p class="question__text">Select options to the questions to find a bar to visit.</p>\n    <button id="startBtn">Start</button>';
+  question.innerHTML = '\n    <p class="question__text">Click start to answer a few questions about what kind of bar you\'d like to visit!</p>\n    <button id="startBtn" class="button button--large">Start</button>';
 
   // Add event listener to start button
   var startBtn = document.getElementById('startBtn');
@@ -422,11 +422,11 @@ var _exception = __webpack_require__(1);
 
 var _exception2 = _interopRequireDefault(_exception);
 
-var _helpers = __webpack_require__(16);
+var _helpers = __webpack_require__(17);
 
-var _decorators = __webpack_require__(14);
+var _decorators = __webpack_require__(15);
 
-var _logger = __webpack_require__(24);
+var _logger = __webpack_require__(25);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -516,6 +516,37 @@ exports.logger = _logger2['default'];
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+function about() {
+  function show() {
+    var about = document.querySelector('.about'),
+        close = document.getElementById('close');
+
+    about.classList.add('about--is-visible');
+    close.addEventListener('click', hide);
+  }
+
+  function hide() {
+    var about = document.querySelector('.about');
+
+    about.classList.remove('about--is-visible');
+  }
+
+  var aboutBtn = document.getElementById('aboutBtn');
+  aboutBtn.addEventListener('click', show);
+}
+
+exports.default = about;
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -527,17 +558,21 @@ module.exports = {
 };
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _keys = __webpack_require__(5);
+var _keys = __webpack_require__(6);
 
 var _keys2 = _interopRequireDefault(_keys);
 
 var _questions = __webpack_require__(3);
+
+var _about = __webpack_require__(5);
+
+var _about2 = _interopRequireDefault(_about);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -552,10 +587,11 @@ function loadMapScript() {
 window.onload = function () {
   loadMapScript();
   (0, _questions.initFinder)();
+  (0, _about2.default)();
 };
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -567,10 +603,18 @@ Object.defineProperty(exports, "__esModule", {
 
 var _questions = __webpack_require__(3);
 
+// Add all bars button event listener
+var allBarsBtn = document.getElementById('allBarsBtn');
+allBarsBtn.addEventListener('click', function () {
+  if (!document.querySelector('.results')) {
+    displayResults();
+  }
+});
+
 // Displays the details of the matched bars using a Handlebars template
 function displayBars() {
   var results = document.querySelector('.results'),
-      resultsTemplate = __webpack_require__(11);
+      resultsTemplate = __webpack_require__(12);
   var context = void 0,
       displayResult = void 0;
   var html = _questions.matchedBars.map(function (bar) {
@@ -707,24 +751,27 @@ function initMap() {
 
 // Add a restart button after the results, which will restart the finder when clicked
 function insertRestartButton() {
-  var wrapper = document.querySelector('.wrapper'),
-      mainContent = document.querySelector('.main-content'),
+  var mainContent = document.querySelector('.main-content'),
       restart = document.createElement('div'),
       results = document.querySelector('.results'),
       map = document.querySelector('.map');
 
   restart.classList.add('restart');
-  restart.innerHTML = '<button id="restartBtn">Restart</button>';
-  wrapper.insertBefore(restart, null);
+  restart.innerHTML = '<button id="restartBtn" class="button button--large">Restart</button>';
+  mainContent.appendChild(restart);
 
   // Add event listener to restart button
   var restartBtn = document.getElementById('restartBtn');
   restartBtn.addEventListener('click', function () {
     // Remove results
-    mainContent.removeChild(results);
-    mainContent.removeChild(map);
+    if (results) {
+      mainContent.removeChild(results);
+    }
+    if (map) {
+      mainContent.removeChild(map);
+    }
     // Remove restart button
-    wrapper.removeChild(restart);
+    mainContent.removeChild(restart);
     // Reinitiate the bar finder
     (0, _questions.initFinder)();
     // Set counter to 0
@@ -753,16 +800,16 @@ function displayResults() {
     question.innerHTML = '<p class="question__text">Here are your bar options. Go drink!</p>';
     displayBars();
     initMap();
-    insertRestartButton();
   } else {
     question.innerHTML = '<p class="question__text">You chose poorly. Try again.</p>';
   }
+  insertRestartButton();
 }
 
 exports.default = displayResults;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -788,7 +835,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -810,7 +857,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -828,7 +875,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 },"useData":true});
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -856,7 +903,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 },"useData":true});
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -882,7 +929,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -904,7 +951,7 @@ var base = _interopRequireWildcard(_handlebarsBase);
 // Each of these augment the Handlebars object. No need to setup here.
 // (This is done to easily share code between commonjs and browse envs)
 
-var _handlebarsSafeString = __webpack_require__(27);
+var _handlebarsSafeString = __webpack_require__(28);
 
 var _handlebarsSafeString2 = _interopRequireDefault(_handlebarsSafeString);
 
@@ -916,11 +963,11 @@ var _handlebarsUtils = __webpack_require__(0);
 
 var Utils = _interopRequireWildcard(_handlebarsUtils);
 
-var _handlebarsRuntime = __webpack_require__(26);
+var _handlebarsRuntime = __webpack_require__(27);
 
 var runtime = _interopRequireWildcard(_handlebarsRuntime);
 
-var _handlebarsNoConflict = __webpack_require__(25);
+var _handlebarsNoConflict = __webpack_require__(26);
 
 var _handlebarsNoConflict2 = _interopRequireDefault(_handlebarsNoConflict);
 
@@ -955,7 +1002,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -967,7 +1014,7 @@ exports.registerDefaultDecorators = registerDefaultDecorators;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _decoratorsInline = __webpack_require__(15);
+var _decoratorsInline = __webpack_require__(16);
 
 var _decoratorsInline2 = _interopRequireDefault(_decoratorsInline);
 
@@ -978,7 +1025,7 @@ function registerDefaultDecorators(instance) {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1014,7 +1061,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1026,31 +1073,31 @@ exports.registerDefaultHelpers = registerDefaultHelpers;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _helpersBlockHelperMissing = __webpack_require__(17);
+var _helpersBlockHelperMissing = __webpack_require__(18);
 
 var _helpersBlockHelperMissing2 = _interopRequireDefault(_helpersBlockHelperMissing);
 
-var _helpersEach = __webpack_require__(18);
+var _helpersEach = __webpack_require__(19);
 
 var _helpersEach2 = _interopRequireDefault(_helpersEach);
 
-var _helpersHelperMissing = __webpack_require__(19);
+var _helpersHelperMissing = __webpack_require__(20);
 
 var _helpersHelperMissing2 = _interopRequireDefault(_helpersHelperMissing);
 
-var _helpersIf = __webpack_require__(20);
+var _helpersIf = __webpack_require__(21);
 
 var _helpersIf2 = _interopRequireDefault(_helpersIf);
 
-var _helpersLog = __webpack_require__(21);
+var _helpersLog = __webpack_require__(22);
 
 var _helpersLog2 = _interopRequireDefault(_helpersLog);
 
-var _helpersLookup = __webpack_require__(22);
+var _helpersLookup = __webpack_require__(23);
 
 var _helpersLookup2 = _interopRequireDefault(_helpersLookup);
 
-var _helpersWith = __webpack_require__(23);
+var _helpersWith = __webpack_require__(24);
 
 var _helpersWith2 = _interopRequireDefault(_helpersWith);
 
@@ -1067,7 +1114,7 @@ function registerDefaultHelpers(instance) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1113,7 +1160,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1214,7 +1261,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1246,7 +1293,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1282,7 +1329,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1315,7 +1362,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1334,7 +1381,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1374,7 +1421,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1428,7 +1475,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1453,10 +1500,10 @@ exports['default'] = function (Handlebars) {
 module.exports = exports['default'];
 //# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL2xpYi9oYW5kbGViYXJzL25vLWNvbmZsaWN0LmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7O3FCQUNlLFVBQVMsVUFBVSxFQUFFOztBQUVsQyxNQUFJLElBQUksR0FBRyxPQUFPLE1BQU0sS0FBSyxXQUFXLEdBQUcsTUFBTSxHQUFHLE1BQU07TUFDdEQsV0FBVyxHQUFHLElBQUksQ0FBQyxVQUFVLENBQUM7O0FBRWxDLFlBQVUsQ0FBQyxVQUFVLEdBQUcsWUFBVztBQUNqQyxRQUFJLElBQUksQ0FBQyxVQUFVLEtBQUssVUFBVSxFQUFFO0FBQ2xDLFVBQUksQ0FBQyxVQUFVLEdBQUcsV0FBVyxDQUFDO0tBQy9CO0FBQ0QsV0FBTyxVQUFVLENBQUM7R0FDbkIsQ0FBQztDQUNIIiwiZmlsZSI6Im5vLWNvbmZsaWN0LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyogZ2xvYmFsIHdpbmRvdyAqL1xuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24oSGFuZGxlYmFycykge1xuICAvKiBpc3RhbmJ1bCBpZ25vcmUgbmV4dCAqL1xuICBsZXQgcm9vdCA9IHR5cGVvZiBnbG9iYWwgIT09ICd1bmRlZmluZWQnID8gZ2xvYmFsIDogd2luZG93LFxuICAgICAgJEhhbmRsZWJhcnMgPSByb290LkhhbmRsZWJhcnM7XG4gIC8qIGlzdGFuYnVsIGlnbm9yZSBuZXh0ICovXG4gIEhhbmRsZWJhcnMubm9Db25mbGljdCA9IGZ1bmN0aW9uKCkge1xuICAgIGlmIChyb290LkhhbmRsZWJhcnMgPT09IEhhbmRsZWJhcnMpIHtcbiAgICAgIHJvb3QuSGFuZGxlYmFycyA9ICRIYW5kbGViYXJzO1xuICAgIH1cbiAgICByZXR1cm4gSGFuZGxlYmFycztcbiAgfTtcbn1cbiJdfQ==
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(30)))
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1770,7 +1817,7 @@ function executeDecorators(fn, prog, container, depths, data, blockParams) {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1792,7 +1839,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -1880,12 +1927,25 @@ module.exports = {
 			"price": "$$",
 			"priceRange": "mid-high",
 			"website": "http://www.thenorthman.com/"
+		},
+		{
+			"name": "The Pepper Canister",
+			"address": "509 N Wells St, Chicago, IL 60654",
+			"latitude": 41.89115,
+			"longitude": -87.63373,
+			"neighborhood": "River North",
+			"drink": "beer",
+			"otherDrinks": "wine, cocktails",
+			"tv": "yes",
+			"price": "$$",
+			"priceRange": "mid-high",
+			"website": "http://thepeppercanister.com/"
 		}
 	]
 };
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports) {
 
 var g;
