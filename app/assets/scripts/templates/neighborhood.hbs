@@ -1,0 +1,9 @@
+<p class="question__text">Where in the city do you want to grab a drink?</p>
+<div class="neighborhood-choices">
+    {{#each options as |neighborhood index|}}
+    <div>
+        <input class="neighborhood" name="neighborhood" type="checkbox" id="checkbox-{{index}}" value="{{neighborhood}}" />
+        <label class="neighborhood-label" for="checkbox-{{index}}">{{neighborhood}}</label>
+    </div>
+    {{/each}}
+</div>

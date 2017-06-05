@@ -8,11 +8,19 @@
     }
 
     h1 {
-        color: $light-blue;
         font-family: $accent-font-stack;
         font-size: 3rem;
         letter-spacing: .2rem;
         text-align: center;
         background-color: $dark-gray;
+
+        a {
+            color: $light-blue;
+            text-decoration: none;
+
+            &:hover {
+                color: $yellow;
+            }
+        }
     }
 }

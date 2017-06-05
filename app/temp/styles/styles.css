@@ -57,12 +57,16 @@ html, body {
     width: 600px; } }
 
 .site-header h1 {
-  color: #E0E6EB;
   font-family: "Chonburi", serif;
   font-size: 3rem;
   letter-spacing: .2rem;
   text-align: center;
   background-color: #2A2A30; }
+  .site-header h1 a {
+    color: #E0E6EB;
+    text-decoration: none; }
+    .site-header h1 a:hover {
+      color: #E1CD94; }
 
 .site-footer {
   text-align: center; }
