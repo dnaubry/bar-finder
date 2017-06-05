@@ -1,16 +1,9 @@
 <p class="question__text">What's the max you'd spend per drink?</p>
     <div class="price-choices">
-      <div>
-        <input class="price" name="priceRange" type="radio" id="radio-low-price" value="{{options.[0]}}" />
-        <label class="price-label" for="radio-low-price">$</label>
-      </div>
-      <div>
-        <input class="price" name="priceRange" type="radio" id="radio-mid-price" value="{{options.[1]}}" />
-        <label class="price-label" for="radio-mid-price">$$</label>
-      </div>
-      <div>
-        <input class="price" name="priceRange" type="radio" id="radio-high-price" value="{{options.[2]}}" />
-        <label class="price-label" for="radio-high-price">$$$</label>
-      </div>
-      </div>
+      {{#each options}}
+        <div>
+          <input class="price" name="priceRange" type="radio" id="radio-{{this}}-price" value="{{this}}" />
+          <label class="price-label" for="radio-{{this}}-price">{{this}}</label>
+        </div>
+      {{/each}}
     </div>

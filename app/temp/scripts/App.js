@@ -1670,8 +1670,18 @@ var BarFinder = {
   },
   filterMatches: function filterMatches(criteria, topic) {
     this.matches = [].concat(_toConsumableArray(this.matches.filter(function (bar) {
-      var regex = new RegExp(criteria, 'gi');
-      return bar[topic].match(regex) || bar.otherDrinks.match(regex);
+      // For the neighborhood question, match exact selection
+      if (topic === 'neighborhood') {
+        return bar[topic] === criteria;
+        // For the drink question, include the otherDrinks property options in filter
+      } else if (topic === 'drink') {
+        return bar[topic] === criteria || bar.otherDrinks.includes(criteria);
+      } else {
+        // Otherwise, return bars that include the criteria
+        // For price and tv questions, Uses priceRange property and tvOptions property
+        // to include all results based on selection
+        return bar[topic].includes(criteria);
+      }
     })));
     return this.matches;
   },
@@ -2035,6 +2045,7 @@ var Results = {
   successHtml: '<p class="question__text">Here are your bar options. Go drink!</p>',
   failHtml: '<p class="question__text">You chose poorly. Try again.</p>',
 
+  // Shows matched bars using Handlebars template
   showMatches: function showMatches(matches) {
     var results = document.querySelector('.results'),
         resultsTemplate = __webpack_require__(120);
@@ -2189,14 +2200,20 @@ var Results = {
       // Create elements to insert the matched bars and map into
       (0, _Elements.createElement)('main-content', 'results');
       (0, _Elements.createElement)('main-content', 'map');
+      // Displays success message, matched bar results and map
       question.innerHTML = this.successHtml;
       this.showMatches(matches);
       this.initMap(matches);
     } else {
+      // Displays no results message
       question.innerHTML = this.failHtml;
     }
+    // Adds restart button to page
     this.setupRestart();
   },
+
+
+  // Removes results when re-initilizing finder
   remove: function remove() {
     // If they exist, remove results, map, and restart elements
     if (document.querySelector('.results')) {
@@ -3108,7 +3125,7 @@ var _Results2 = _interopRequireDefault(_Results);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Question = {
-  // Inserts question based on the current topic (determined by count)
+  // Inserts question using Handlebars template based on the current topic (determined by count)
   insert: function insert(topic) {
     var question = document.querySelector('.question'),
         name = this.name,
@@ -3131,6 +3148,9 @@ var Question = {
       return false;
     }
   },
+
+
+  // Adds event listeners for question options
   events: function events(name) {
     var options = document.querySelectorAll('.' + name);
     options.forEach(function (option) {
@@ -8325,16 +8345,24 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 
 var Handlebars = __webpack_require__(50);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
-module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+    var alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "<p class=\"question__text\">What's the max you'd spend per drink?</p>\r\n    <div class=\"price-choices\">\r\n      <div>\r\n        <input class=\"price\" name=\"priceRange\" type=\"radio\" id=\"radio-low-price\" value=\""
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.options : depth0)) != null ? stack1["0"] : stack1), depth0))
-    + "\" />\r\n        <label class=\"price-label\" for=\"radio-low-price\">$</label>\r\n      </div>\r\n      <div>\r\n        <input class=\"price\" name=\"priceRange\" type=\"radio\" id=\"radio-mid-price\" value=\""
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.options : depth0)) != null ? stack1["1"] : stack1), depth0))
-    + "\" />\r\n        <label class=\"price-label\" for=\"radio-mid-price\">$$</label>\r\n      </div>\r\n      <div>\r\n        <input class=\"price\" name=\"priceRange\" type=\"radio\" id=\"radio-high-price\" value=\""
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.options : depth0)) != null ? stack1["2"] : stack1), depth0))
-    + "\" />\r\n        <label class=\"price-label\" for=\"radio-high-price\">$$$</label>\r\n      </div>\r\n      </div>\r\n    </div>";
+  return "        <div>\r\n          <input class=\"price\" name=\"priceRange\" type=\"radio\" id=\"radio-"
+    + alias2(alias1(depth0, depth0))
+    + "-price\" value=\""
+    + alias2(alias1(depth0, depth0))
+    + "\" />\r\n          <label class=\"price-label\" for=\"radio-"
+    + alias2(alias1(depth0, depth0))
+    + "-price\">"
+    + alias2(alias1(depth0, depth0))
+    + "</label>\r\n        </div>\r\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "<p class=\"question__text\">What's the max you'd spend per drink?</p>\r\n    <div class=\"price-choices\">\r\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.options : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "    </div>";
 },"useData":true});
 
 /***/ }),

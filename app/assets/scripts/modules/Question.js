@@ -2,7 +2,7 @@ import BarFinder from '../App';
 import Results from './Results';
 
 const Question = {
-  // Inserts question based on the current topic (determined by count)
+  // Inserts question using Handlebars template based on the current topic (determined by count)
   insert(topic) {
     const question = document.querySelector('.question'),
       name = this.name,
@@ -25,6 +25,7 @@ const Question = {
     }
   },
 
+  // Adds event listeners for question options
   events(name) {
     const options = document.querySelectorAll(`.${name}`);
     options.forEach(function(option) {

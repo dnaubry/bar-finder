@@ -6,6 +6,7 @@ const Results = {
   successHtml: '<p class="question__text">Here are your bar options. Go drink!</p>',
   failHtml: '<p class="question__text">You chose poorly. Try again.</p>',
 
+  // Shows matched bars using Handlebars template
   showMatches(matches) {
     const results = document.querySelector('.results'),
       resultsTemplate = require('../templates/results.hbs');
@@ -203,15 +204,19 @@ const Results = {
       // Create elements to insert the matched bars and map into
       createElement('main-content', 'results');
       createElement('main-content', 'map');
+      // Displays success message, matched bar results and map
       question.innerHTML = this.successHtml;
       this.showMatches(matches);
       this.initMap(matches);
     } else {
+      // Displays no results message
       question.innerHTML = this.failHtml;
     }
+    // Adds restart button to page
     this.setupRestart();
   },
 
+  // Removes results when re-initilizing finder
   remove() {
     // If they exist, remove results, map, and restart elements
     if (document.querySelector('.results')) {

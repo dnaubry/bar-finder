@@ -35,9 +35,19 @@ const BarFinder = {
 
   filterMatches(criteria, topic) {
     this.matches = [...this.matches.filter(bar => {
-      const regex = new RegExp(criteria, 'gi');
-      return bar[topic].match(regex) ||
-            bar.otherDrinks.match(regex);
+      // For the neighborhood question, match exact selection
+      if (topic === 'neighborhood') {
+        return bar[topic] === criteria;
+        // For the drink question, include the otherDrinks property options in filter
+      } else if (topic === 'drink') {
+        return bar[topic] === criteria ||
+          bar.otherDrinks.includes(criteria);
+      } else {
+        // Otherwise, return bars that include the criteria
+        // For price and tv questions, Uses priceRange property and tvOptions property
+        // to include all results based on selection
+        return bar[topic].includes(criteria);
+      }
     })];
     return this.matches;
   },
