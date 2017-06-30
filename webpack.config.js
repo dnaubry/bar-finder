@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    App: ['babel-polyfill', './app/assets/scripts/App.js']
+    App: ['core-js/fn/array/from', 'core-js/fn/string/includes', 'core-js/es6/set', './app/assets/scripts/App.js']
   },
   output: {
     path: path.resolve(__dirname, 'app/temp/scripts'),

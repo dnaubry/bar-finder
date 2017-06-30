@@ -27,7 +27,7 @@ const Question = {
 
   // Adds event listeners for question options
   events(name) {
-    const options = document.querySelectorAll(`.${name}`);
+    const options = Array.from(document.querySelectorAll(`.${name}`));
     options.forEach(function(option) {
       option.addEventListener('change', function() {
         // Update matches based on selected option

@@ -1,3 +1,4 @@
+import 'core-js/fn/array/from';
 import keys from '../data/keys.json';
 import barList from '../data/bars.json';
 import Menu from './modules/Menu';
